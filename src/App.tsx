@@ -1,11 +1,11 @@
 // Example in App.tsx or your routes file
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import ProtectedRoute from "./components/routes/ProtectedRoute.tsx"
+import ProtectedRoute from "./routes/ProtectedRoute.tsx"
 import Dashboard from "./pages/Dashboard.tsx"
 import Login from "./pages/Login.tsx"
 import Home from "./pages/Home.tsx"
 import SignUp from "./pages/SignUp.tsx"
-import PublicRoute from "./components/routes/PublicRoute.tsx"
+import PublicRoute from "./routes/PublicRoute.tsx"
 
 export default function App() {
 	return (

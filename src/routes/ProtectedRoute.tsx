@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
 import { Navigate } from "react-router-dom"
-import { auth } from "../../utils/firebaseConfig"
+import { auth } from "../utils/firebaseConfig"
 import type { ReactNode } from "react"
 
-interface PublicRouteProps {
+interface ProtectedRouteProps {
 	children: ReactNode
 }
 
-export default function PublicRoute({ children }: PublicRouteProps) {
+export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 	const [loading, setLoading] = useState(true)
 	const [user, setUser] = useState(() => auth.currentUser)
 
@@ -21,8 +21,8 @@ export default function PublicRoute({ children }: PublicRouteProps) {
 
 	if (loading) return null
 
-	if (user) {
-		return <Navigate to='/dashboard' replace />
+	if (!user) {
+		return <Navigate to='/login' replace />
 	}
 	return <>{children}</>
 }
