@@ -2,6 +2,7 @@ import { useState } from "react"
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../utils/firebaseConfig"
 import { Link, useNavigate } from "react-router-dom"
+import { ensureUserDoc } from "../services/userService"
 
 export default function Login() {
 	const [email, setEmail] = useState("")
@@ -15,6 +16,7 @@ export default function Login() {
 		try {
 			await signInWithEmailAndPassword(auth, email, password)
 			navigate("/dashboard")
+            await ensureUserDoc()
 		} catch (err: unknown) {
 			if (err instanceof Error) {
 				setError(err.message)
