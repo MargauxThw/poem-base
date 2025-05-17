@@ -5,16 +5,12 @@ import { auth } from "../utils/firebaseConfig"
 import { useNavigate } from "react-router-dom"
 
 export default function ButtonSignOut() {
-  const navigate = useNavigate()
+	const navigate = useNavigate()
 
-  const handleSignOut = async () => {
-    await signOut(auth)
-    navigate("/login")
-  }
+	const handleSignOut = async () => {
+		await signOut(auth)
+		navigate("/login")
+	}
 
-  return (
-    <button onClick={handleSignOut}>
-      Sign Out
-    </button>
-  )
+	return <button onClick={handleSignOut}>Sign Out</button>
 }

@@ -6,10 +6,12 @@ import Login from "./pages/Login.tsx"
 import Home from "./pages/Home.tsx"
 import SignUp from "./pages/SignUp.tsx"
 import PublicRoute from "./routes/PublicRoute.tsx"
+import NavBar from "./components/NavBar.tsx"
 
 export default function App() {
 	return (
 		<BrowserRouter>
+			<NavBar />
 			<Routes>
 				<Route path='/' element={<Home />} />
 				<Route
