@@ -2,15 +2,33 @@ import { Link } from "react-router-dom"
 import { FONT_OPTIONS, THEME_OPTIONS } from "../utils/staticData"
 import FontButton from "./buttons/FontButton"
 import ThemeButton from "./buttons/ThemeButton"
+import FontSizeSlider from "./FontSizeSlider"
+import {
+	Sheet,
+	SheetContent,
+	SheetDescription,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger
+} from "@/components/ui/sheet"
 
 type NavBarProps = {
 	updateFont: (newIndex: number) => void
-	fontIndex: number,
-    updateTheme: (newIndex: number) => void
-	themeIndex: number
+	fontIndex: number
+	updateTheme: (newIndex: number) => void
+	themeIndex: number,
+    updateFontSize: (newSize: number) => void
+	fontSize: number
 }
 
-export default function NavBar({ updateFont, fontIndex, updateTheme, themeIndex }: NavBarProps) {
+export default function NavBar({
+	updateFont,
+	fontIndex,
+	updateTheme,
+	themeIndex,
+    updateFontSize,
+    fontSize
+}: NavBarProps) {
 	return (
 		<nav
 			style={{
@@ -28,6 +46,19 @@ export default function NavBar({ updateFont, fontIndex, updateTheme, themeIndex 
 			<Link to='/dashboard'>Dashboard</Link>
 			<Link to='/login'>Log in</Link>
 			<Link to='/my-poems'>My Poems</Link>
+			<Sheet>
+				<SheetTrigger>Open</SheetTrigger>
+				<SheetContent className='w-[400px] sm:w-[540px]'>
+					<SheetHeader>
+						<SheetTitle>Are you absolutely sure?</SheetTitle>
+						<SheetDescription>
+							This action cannot be undone. This will permanently
+							delete your account and remove your data from our
+							servers.
+						</SheetDescription>
+					</SheetHeader>
+				</SheetContent>
+			</Sheet>
 			{FONT_OPTIONS.map((_font, index) => (
 				<FontButton
 					key={index}
@@ -44,6 +75,10 @@ export default function NavBar({ updateFont, fontIndex, updateTheme, themeIndex 
 					updateTheme={updateTheme}
 				/>
 			))}
+			<FontSizeSlider
+				currentFontSize={fontSize}
+				updateFontSize={updateFontSize}
+			/>
 		</nav>
 	)
 }

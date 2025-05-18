@@ -23,6 +23,11 @@ export default function App() {
 		return stored ? Number(stored) : 0
 	})
 
+  const [fontSize, setFontSize] = useState(() => {
+    const stored = localStorage.getItem("font_size")
+    return stored ? Number(stored) : 100
+  })
+
 	function updateFont(newIndex: number) {
 		setFontIndex(newIndex)
 		localStorage.setItem("font_index", String(newIndex))
@@ -33,6 +38,11 @@ export default function App() {
 		localStorage.setItem("theme_index", String(newIndex))
 	}
 
+	function updateFontSize(newSize: number) {
+		setFontSize(newSize)
+		localStorage.setItem("font_size", String(newSize))
+	}
+
 	return (
 		<BrowserRouter>
 			<NavBar
@@ -40,8 +50,10 @@ export default function App() {
 				fontIndex={fontIndex}
 				updateTheme={updateTheme}
 				themeIndex={themeIndex}
+				updateFontSize={updateFontSize}
+				fontSize={fontSize}
 			/>
-			{/* TODO: Slider for font-size - use EM for actual sizes? Also add some options for line height ALSO fix nav bar and move all of this into a pop-up */}
+			{/* Add some options for line height ALSO fix nav bar and move all of this into a pop-up */}
 
 			<div
 				style={{
@@ -49,7 +61,7 @@ export default function App() {
 					background: THEME_OPTIONS[themeIndex].background,
 					color: THEME_OPTIONS[themeIndex].color,
 					width: "100vw",
-					fontSize: "120%"
+					fontSize: `${fontSize}%`
 				}}
 			>
 				<Routes>
