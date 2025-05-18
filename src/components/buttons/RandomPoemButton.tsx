@@ -1,4 +1,8 @@
-export default function ButtonRandomPoem({getRandomPoem}: {getRandomPoem: () => void}) {
+export default function RandomPoemButton({
+	getRandomPoem
+}: {
+	getRandomPoem: () => void
+}) {
 	const handleClick = () => {
 		getRandomPoem()
 	}

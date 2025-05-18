@@ -7,7 +7,7 @@ import {
 	serverTimestamp,
 	query,
 	orderBy,
-    getDoc
+	getDoc
 } from "firebase/firestore"
 import type { LikedPoem, Poem } from "../utils/types"
 
@@ -27,6 +27,7 @@ export async function likePoem(poem: Poem) {
 
 	await runTransaction(db, async (transaction) => {
 		const likeSnap = await transaction.get(likeRef)
+		const userSnap = await transaction.get(userRef)
 
 		if (!likeSnap.exists()) {
 			// Add the like
@@ -39,7 +40,6 @@ export async function likePoem(poem: Poem) {
 			})
 
 			// Increment likeCount on user doc
-			const userSnap = await transaction.get(userRef)
 			const currentCount = userSnap.exists()
 				? userSnap.data().likeCount || 0
 				: 0
@@ -49,6 +49,8 @@ export async function likePoem(poem: Poem) {
 			})
 		}
 	})
+
+	return true
 }
 
 export async function unlikePoem(poem: Poem) {
@@ -63,12 +65,12 @@ export async function unlikePoem(poem: Poem) {
 
 	await runTransaction(db, async (transaction) => {
 		const likeSnap = await transaction.get(likeRef)
+		const userSnap = await transaction.get(userRef)
 
 		if (likeSnap.exists()) {
 			transaction.delete(likeRef)
 
 			// Decrement likeCount on user doc
-			const userSnap = await transaction.get(userRef)
 			const currentCount = userSnap.exists()
 				? userSnap.data().likeCount || 0
 				: 0
@@ -78,6 +80,8 @@ export async function unlikePoem(poem: Poem) {
 			})
 		}
 	})
+
+	return true
 }
 
 export async function getAllLikedPoems(): Promise<Array<LikedPoem>> {
@@ -101,15 +105,14 @@ export async function getAllLikedPoems(): Promise<Array<LikedPoem>> {
 }
 
 export async function poemIsLiked(poem: Poem): Promise<boolean> {
-    const uid = auth.currentUser?.uid
-    if (!uid) {
-        throw new Error("User is not logged in")
-    }
+	const uid = auth.currentUser?.uid
+	if (!uid) {
+		throw new Error("User is not logged in")
+	}
 
-    const likeId = getLikeId(poem)
-    const likeRef = doc(db, "users", uid, "likes", likeId)
+	const likeId = getLikeId(poem)
+	const likeRef = doc(db, "users", uid, "likes", likeId)
 
-    const likeSnap = await getDoc(likeRef)
-    return likeSnap.exists()
+	const likeSnap = await getDoc(likeRef)
+	return likeSnap.exists()
 }
-

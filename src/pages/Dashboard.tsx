@@ -1,8 +1,9 @@
 import { useState } from "react"
-import ButtonRandomPoem from "../components/ButtonRandomPoem"
-import ButtonSignOut from "../components/ButtonSignOut"
+import RandomPoemButton from "../components/buttons/RandomPoemButton"
+import SignOutButton from "../components/buttons/SignOutButton"
 import type { Poem } from "../utils/types"
 import PoemLayout from "../components/PoemLayout"
+import LikeButton from "../components/buttons/LikeButton"
 
 export default function Dashboard() {
 	const emptyPoem: Poem = {
@@ -23,7 +24,7 @@ export default function Dashboard() {
                     while (randomPoem.title === poem.title && data.length > 1) {
                         randomPoem = data[Math.random() * data.length | 0]
                     }
-                    
+
 					setPoem({
 						title: randomPoem.title,
 						author: randomPoem.author,
@@ -37,10 +38,10 @@ export default function Dashboard() {
 	return (
 		<>
 			<h1>Dashboard</h1>
-			<ButtonSignOut />
+			<SignOutButton />
 			<PoemLayout poem={poem} />
-			<ButtonRandomPoem getRandomPoem={getRandomPoem} />
-			{/* <ButtonLike poem={poem} /> */}
+			<RandomPoemButton getRandomPoem={getRandomPoem} />
+			<LikeButton poem={poem} />
 		</>
 	)
 }
