@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import type { Poem } from "../utils/types"
 import { getPoemBySlug } from "../services/poemService"
 import LikeButton from "../components/buttons/LikeButton"
+import RandomPoemButton from "../components/buttons/RandomPoemButton"
 
 export default function PoemPage() {
 	const { slug } = useParams<{ slug: string }>()
@@ -34,6 +35,7 @@ export default function PoemPage() {
 			{poem ? (
 				<>
 					<PoemLayout poem={poem} />
+					<RandomPoemButton setNewPoem={setPoem} poem={poem} />
 					<LikeButton poem={poem} />
 				</>
 			) : (

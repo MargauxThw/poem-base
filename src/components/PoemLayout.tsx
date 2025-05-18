@@ -2,16 +2,17 @@ import { useEffect, useState } from "react"
 import type { Poem } from "../utils/types"
 import Markdown from "react-markdown"
 import rehypeRaw from "rehype-raw"
+import { samplePoem } from "../utils/staticData"
 
-export default function PoemLayout({ poem }: { poem: Poem }) {
-	const [poemState, setPoemState] = useState<Poem>(poem)
+export default function PoemLayout({ poem }: { poem: Poem | null }) {
+	const [poemState, setPoemState] = useState<Poem>(poem ? poem : (samplePoem))
 
 	useEffect(() => {
 		window.scrollTo({
 			top: 0,
 			behavior: "smooth"
 		})
-		setPoemState(poem)
+		setPoemState(poem ? poem : samplePoem)
 	}, [poem])
 
 	return (
