@@ -1,14 +1,26 @@
 import type { Poem } from "./types"
 
 export const FONT_OPTIONS = [
-	{ label: "Serif (Literata)", shortLabel: "Serif", value: "'Literata', serif" },
-	{ label: "Sans-serif (Inter)", shortLabel: "Sans-serif", value: "'Inter', sans-serif" },
+	{
+		label: "Serif (Literata)",
+		shortLabel: "Serif",
+		value: "'Literata', serif"
+	},
+	{
+		label: "Sans-serif (Inter)",
+		shortLabel: "Sans-serif",
+		value: "'Inter', sans-serif"
+	},
+	{
+		label: "Monospace (IBM Plex Mono)",
+		shortLabel: "Monospace",
+		value: "'IBM Plex Mono', monospace"
+	},
 	{
 		label: "Accessible (Atkinson Hyperlegible)",
 		shortLabel: "Accessible",
 		value: "'Atkinson Hyperlegible', sans-serif"
-	},
-	{ label: "Monospace (IBM Plex Mono)", shortLabel: "Monospace", value: "'IBM Plex Mono', monospace" }
+	}
 ]
 
 export const THEME_OPTIONS = [
@@ -16,7 +28,7 @@ export const THEME_OPTIONS = [
 	{ label: "dark", background: "#000000", color: "#FFFFFF" },
 	{ label: "sepia", background: "#FBEFD8", color: "#3A2C27" },
 	{ label: "blue", background: "#DDEBF4", color: "#2B3440" },
-	{ label: "green", background: "#C5E7CE", color: "#2A2E2B" },
+	{ label: "green", background: "#C5E7CE", color: "#2A2E2B" }
 ]
 
 export const samplePoem: Poem = {

@@ -28,6 +28,11 @@ export default function App() {
     return stored ? Number(stored) : 100
   })
 
+  const [lineHeight, setLineHeight] = useState(() => {
+    const stored = localStorage.getItem("line_height")
+    return stored ? Number(stored) : 1.5
+  })
+
 	function updateFont(newIndex: number) {
 		setFontIndex(newIndex)
 		localStorage.setItem("font_index", String(newIndex))
@@ -36,6 +41,11 @@ export default function App() {
 	function updateTheme(newIndex: number) {
 		setThemeIndex(newIndex)
 		localStorage.setItem("theme_index", String(newIndex))
+	}
+
+	function updateLineHeight(newSize: number) {
+		setLineHeight(newSize)
+		localStorage.setItem("line_height", String(newSize))
 	}
 
 	function updateFontSize(newSize: number) {
@@ -52,8 +62,11 @@ export default function App() {
 				themeIndex={themeIndex}
 				updateFontSize={updateFontSize}
 				fontSize={fontSize}
+        updateLineHeight={updateLineHeight}
+        lineHeight={lineHeight}
 			/>
-			{/* Add some options for line height ALSO fix nav bar and move all of this into a pop-up */}
+			{/* TODO: Add some options for line height ALSO fix nav bar and move all of this into a pop-up */}
+      {/* TODO: Experiment with just doing it for the poem text (not buttons) */}
 
 			<div
 				style={{
@@ -61,7 +74,8 @@ export default function App() {
 					background: THEME_OPTIONS[themeIndex].background,
 					color: THEME_OPTIONS[themeIndex].color,
 					width: "100vw",
-					fontSize: `${fontSize}%`
+					fontSize: `${fontSize}%`,
+          lineHeight: `${lineHeight}em`,
 				}}
 			>
 				<Routes>

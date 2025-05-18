@@ -16,38 +16,43 @@ export default function FontButton({
 	}
 
 	return (
-		<div
+		<button
+			onClick={() => handleFontChange(index)}
 			style={{
+				border: "none",
+				color: currentFontIndex === index ? "#1E78BA" : "black",
+				background: "transparent",
+				cursor: "pointer",
+				height: "64px",
 				display: "flex",
 				flexDirection: "column",
 				alignItems: "center",
-				gap: "0rem"
+				justifyContent: "center",
+				gap: "4px",
+				outline: "none",
+                padding: "0",
+                flexGrow: 1,
 			}}
 		>
-			<button
-				onClick={() => handleFontChange(index)}
+			<p
 				style={{
-					border: "none",
+					fontFamily: FONT_OPTIONS[index].value,
+					fontSize: "1.5rem",
 					textDecorationLine:
-						currentFontIndex === index ? "underline" : "none",
-					color: currentFontIndex === index ? "#1E78BA" : "black",
-					background: "transparent",
-					cursor: "pointer",
-					fontSize: "2rem",
-					height: "64px",
-					fontFamily: FONT_OPTIONS[index].value
+						currentFontIndex === index ? "underline" : "none"
 				}}
 			>
 				Aa
-			</button>
+			</p>
 			<p
 				style={{
-					marginTop: "0",
-					color: currentFontIndex === index ? "#1E78BA" : "black"
+					color: currentFontIndex === index ? "#1E78BA" : "black",
+					fontSize: "0.75rem",
+					whiteSpace: "nowrap"
 				}}
 			>
 				{FONT_OPTIONS[index].shortLabel}
 			</p>
-		</div>
+		</button>
 	)
 }

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { FONT_OPTIONS, THEME_OPTIONS } from "../utils/staticData"
 import FontButton from "./buttons/FontButton"
 import ThemeButton from "./buttons/ThemeButton"
-import FontSizeSlider from "./FontSizeSlider"
+import FontSizeSlider from "./sliders/FontSizeSlider"
 import {
 	Sheet,
 	SheetContent,
@@ -11,14 +11,17 @@ import {
 	SheetTitle,
 	SheetTrigger
 } from "@/components/ui/sheet"
+import LineHeightSlider from "./sliders/LineHeightSlider"
 
 type NavBarProps = {
 	updateFont: (newIndex: number) => void
 	fontIndex: number
 	updateTheme: (newIndex: number) => void
-	themeIndex: number,
-    updateFontSize: (newSize: number) => void
+	themeIndex: number
+	updateFontSize: (newSize: number) => void
 	fontSize: number
+	updateLineHeight: (newSize: number) => void
+	lineHeight: number
 }
 
 export default function NavBar({
@@ -26,8 +29,10 @@ export default function NavBar({
 	fontIndex,
 	updateTheme,
 	themeIndex,
-    updateFontSize,
-    fontSize
+	updateFontSize,
+	fontSize,
+	updateLineHeight,
+	lineHeight
 }: NavBarProps) {
 	return (
 		<nav
@@ -48,7 +53,7 @@ export default function NavBar({
 			<Link to='/my-poems'>My Poems</Link>
 			<Sheet>
 				<SheetTrigger>Open</SheetTrigger>
-				<SheetContent className='w-[400px] sm:w-[540px]'>
+				<SheetContent className='w-[400px] sm:w-[540px] p-4'>
 					<SheetHeader>
 						<SheetTitle>Are you absolutely sure?</SheetTitle>
 						<SheetDescription>
@@ -57,28 +62,50 @@ export default function NavBar({
 							servers.
 						</SheetDescription>
 					</SheetHeader>
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "row",
+                            justifyContent: "space-around",
+							flexWrap: "nowrap",
+							gap: "4px",
+							width: "100%",
+							backgroundColor: "bg-amber-400"
+						}}
+					>
+						{FONT_OPTIONS.map((_font, index) => (
+							<FontButton
+								key={index}
+								index={index}
+								currentFontIndex={fontIndex}
+								updateFont={updateFont}
+							/>
+						))}
+					</div>
+					<div className='flex flex-row justify-between items-center mb-4 w100%'>
+						{THEME_OPTIONS.map((_theme, index) => (
+							<ThemeButton
+								key={index}
+								index={index}
+								currentThemeIndex={themeIndex}
+								updateTheme={updateTheme}
+							/>
+						))}
+					</div>
+					<div className='mb-4 w100%'>
+						<FontSizeSlider
+							currentFontSize={fontSize}
+							updateFontSize={updateFontSize}
+						/>
+					</div>
+					<div className='mb-4 w100%'>
+						<LineHeightSlider
+							currentLineHeight={lineHeight}
+							updateLineHeight={updateLineHeight}
+						/>
+					</div>
 				</SheetContent>
 			</Sheet>
-			{FONT_OPTIONS.map((_font, index) => (
-				<FontButton
-					key={index}
-					index={index}
-					currentFontIndex={fontIndex}
-					updateFont={updateFont}
-				/>
-			))}
-			{THEME_OPTIONS.map((_theme, index) => (
-				<ThemeButton
-					key={index}
-					index={index}
-					currentThemeIndex={themeIndex}
-					updateTheme={updateTheme}
-				/>
-			))}
-			<FontSizeSlider
-				currentFontSize={fontSize}
-				updateFontSize={updateFontSize}
-			/>
 		</nav>
 	)
 }
