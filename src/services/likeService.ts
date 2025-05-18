@@ -9,9 +9,9 @@ import {
 	orderBy,
 	getDoc
 } from "firebase/firestore"
-import type { LikedPoem, Poem } from "../utils/types"
+import type { BasePoem, LikedPoem, Poem } from "../utils/types"
 
-function getLikeId(poem: Poem): string {
+export function getLikeId(poem: BasePoem): string {
 	return encodeURIComponent(`${poem.title}::${poem.author}::${poem.numLines}`)
 }
 

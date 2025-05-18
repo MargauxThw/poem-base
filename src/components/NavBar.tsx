@@ -6,6 +6,7 @@ export default function NavBar() {
 			<Link to='/'>Home</Link>
 			<Link to='/dashboard'>Dashboard</Link>
 			<Link to='/login'>Log in</Link>
+			<Link to='/my-poems'>My Poems</Link>
 		</nav>
 	)
 }

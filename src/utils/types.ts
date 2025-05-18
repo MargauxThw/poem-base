@@ -1,14 +1,14 @@
-export interface Poem {
-    title: string;
-    author: string;
-    numLines: number;
-    lines: Array<string>;
+export interface BasePoem {
+    title: string
+    author: string
+    numLines: number
 }
 
-export interface LikedPoem {
-    title: string;
-    author: string;
-    numLines: number;
-    peekLines: Array<string>; // Up to 4 lines
-    createdAt?: string; // ISO string format
+export interface Poem extends BasePoem {
+    lines: Array<string>
+}
+
+export interface LikedPoem extends BasePoem {
+    peekLines: Array<string> // Up to 4 lines
+    createdAt?: string // ISO string format
 }

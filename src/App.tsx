@@ -7,6 +7,8 @@ import Home from "./pages/Home.tsx"
 import SignUp from "./pages/SignUp.tsx"
 import PublicRoute from "./routes/PublicRoute.tsx"
 import NavBar from "./components/NavBar.tsx"
+import MyPoems from "./pages/MyPoems.tsx"
+import PoemPage from "./pages/Poem.tsx"
 
 export default function App() {
 	return (
@@ -38,6 +40,15 @@ export default function App() {
 						</ProtectedRoute>
 					}
 				/>
+				<Route
+					path='/my-poems'
+					element={
+						<ProtectedRoute>
+							<MyPoems />
+						</ProtectedRoute>
+					}
+				/>
+				<Route path='/poem/:slug' element={<PoemPage />} />
 			</Routes>
 		</BrowserRouter>
 	)
