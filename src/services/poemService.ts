@@ -10,10 +10,11 @@ function intersectSets(setA: Set<number>, setB: Set<number>): number[] {
 
 export async function getPoemBySlug(slug: string): Promise<Poem | null> {
 	const params = slug.split("::")
-	const url = `https://poetrydb.org/title,author,linecount/${encodeURIComponent(
+	const url = `https://poetrydb.org/title,author/${encodeURIComponent(
 		params[0]
-	)}:abs;${encodeURIComponent(params[1])}:abs;${params[2]}`
+	)}:abs;${encodeURIComponent(params[1])}:abs`
 
+	console.log(url, "URL")
 	try {
 		const response = await fetch(url).then((res) => {
 			if (!res.ok) {

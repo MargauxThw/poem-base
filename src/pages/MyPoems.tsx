@@ -37,6 +37,7 @@ export default function MyPoems() {
 							))}
 						</div>
 					</Link>
+					<hr/>
 				</li>
 			))}
 		</ul>
