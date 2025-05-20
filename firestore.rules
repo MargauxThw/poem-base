@@ -1,0 +1,51 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if user is accessing their own document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Helper function to validate likeCount changes
+    function isValidLikeCountChange() {
+      return request.resource.data.likeCount is int
+        && (request.resource.data.likeCount == resource.data.likeCount + 1
+            || request.resource.data.likeCount == resource.data.likeCount - 1);
+    }
+
+    // Helper function to validate passwordLength updates
+    function isValidPasswordLengthUpdate() {
+      return request.resource.data.passwordLength is int
+        && request.resource.data.passwordLength >= 6;
+    }
+
+    // User document rules
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isOwner(userId) && (
+        // Allow likeCount updates with validation
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likeCount']) 
+          && isValidLikeCountChange())
+        ||
+        // Allow passwordLength updates with validation
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['passwordLength'])
+          && isValidPasswordLengthUpdate())
+      );
+      allow delete: if isOwner(userId);
+    }
+
+    // User's likes subcollection rules
+    match /users/{userId}/likes/{likeId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow delete: if isOwner(userId);
+    }
+  }
+} 
