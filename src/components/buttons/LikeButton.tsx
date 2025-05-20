@@ -1,69 +1,81 @@
-import { useEffect, useState } from "react"
-import type { Poem } from "../../utils/types"
-import { likePoem, poemIsLiked, unlikePoem } from "../../services/likeService"
+import { useEffect, useState } from 'react';
+import type { Poem } from '../../utils/types';
+import { likePoem, poemIsLiked, unlikePoem } from '../../services/likeService';
 
-export default function LikeButton({ poem }: { poem: Poem }) {
-	const [isLiked, setIsLiked] = useState<boolean>(false)
-	const [isLoading, setIsLoading] = useState<boolean>(true)
+type LikeButtonProps = {
+    poem: Poem;
+    onLikeChange?: () => void; // Optional callback function to be called when the like state changes
+};
 
-	useEffect(() => {
-		setIsLiked(false) // Reset state when poem changes
-		setIsLoading(true) // Set loading to true while checking
+export default function LikeButton({ poem, onLikeChange }: LikeButtonProps) {
+    const [isLiked, setIsLiked] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-		const checkIsLiked = async () => {
-			try {
-				const liked = await poemIsLiked(poem)
-				setIsLiked(liked)
-			} catch (error) {
-				console.error("Error checking if poem is liked:", error)
-			}
-		}
+    useEffect(() => {
+        setIsLiked(false); // Reset state when poem changes
+        setIsLoading(true); // Set loading to true while checking
 
-		checkIsLiked()
-		setIsLoading(false) // Set loading to false after checking
-	}, [poem])
+        const checkIsLiked = async () => {
+            try {
+                const liked = await poemIsLiked(poem);
+                setIsLiked(liked);
+            } catch (error) {
+                console.error('Error checking if poem is liked:', error);
+            }
+        };
 
-	const handleClick = async () => {
-		setIsLoading(true) // Set loading to true while processing the like/unlike
+        checkIsLiked();
+        setIsLoading(false); // Set loading to false after checking
+    }, [poem]);
 
-		if (isLiked) {
-			// Optimistically set the state to false before the API call
-			setIsLiked(false)
+    const handleClick = async () => {
+        setIsLoading(true); // Set loading to true while processing the like/unlike
 
-			try {
-				const success = await unlikePoem(poem)
-				if (!success) {
-					setIsLiked(true)
-				}
-			} catch (error) {
-				console.error("Error unliking this poem:", error)
-				setIsLiked(true)
-			}
-		} else {
-			setIsLiked(true)
+        if (isLiked) {
+            // Optimistically set the state to false before the API call
+            setIsLiked(false);
 
-			try {
-				const success = await likePoem(poem)
-				if (!success) {
-					setIsLiked(false)
-				}
-			} catch (error) {
-				console.error("Error liking this poem:", error)
-				setIsLiked(false)
-			}
-		}
-		setIsLoading(false)
-	}
+            try {
+                const success = await unlikePoem(poem);
+                if (!success) {
+                    setIsLiked(true);
+                }
+            } catch (error) {
+                console.error('Error unliking this poem:', error);
+                setIsLiked(true);
+            }
+        } else {
+            setIsLiked(true);
 
-	return (
-		<>
-			{poem.title.length > 0 ? (
-				<button onClick={handleClick} disabled={isLoading}>
-					{isLiked ? "Unlike" : "Like"}
-				</button>
-			) : (
-				<></>
-			)}
-		</>
-	)
+            try {
+                const success = await likePoem(poem);
+                if (!success) {
+                    setIsLiked(false);
+                }
+            } catch (error) {
+                console.error('Error liking this poem:', error);
+                setIsLiked(false);
+            }
+        }
+
+        console.log('Like state changed:', isLiked);
+
+        if (onLikeChange) {
+            onLikeChange();
+        }
+
+        setIsLoading(false);
+    };
+
+    return (
+        <>
+            {poem.title.length > 0 ? (
+                <button onClick={handleClick} disabled={isLoading}>
+                    {isLiked ? 'Unlike' : 'Like'}
+                </button>
+            ) : (
+                <></>
+            )}
+        </>
+    );
 }

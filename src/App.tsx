@@ -9,6 +9,7 @@ import PublicRoute from './routes/PublicRoute.tsx';
 import NavBar from './components/NavBar.tsx';
 import MyPoems from './pages/MyPoems.tsx';
 import PoemPage from './pages/Poem.tsx';
+import MyPoemsViewer from './pages/MyPoemsViewer';
 import { FONT_OPTIONS, THEME_OPTIONS } from './utils/staticData.ts';
 import { useState } from 'react';
 import Account from './pages/Account';
@@ -122,6 +123,14 @@ export default function App() {
                         }
                     />
                     <Route path="/poem/:slug" element={<PoemPage />} />
+                    <Route
+                        path="/my-poems/viewer/:slug"
+                        element={
+                            <ProtectedRoute>
+                                <MyPoemsViewer />
+                            </ProtectedRoute>
+                        }
+                    />
                 </Routes>
             </div>
         </BrowserRouter>

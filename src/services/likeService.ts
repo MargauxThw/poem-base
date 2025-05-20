@@ -1,118 +1,118 @@
-import { auth, db } from "../utils/firebaseConfig"
+import { auth, db } from '../utils/firebaseConfig';
 import {
-	collection,
-	doc,
-	getDocs,
-	runTransaction,
-	serverTimestamp,
-	query,
-	orderBy,
-	getDoc
-} from "firebase/firestore"
-import type { BasePoem, LikedPoem, Poem } from "../utils/types"
+    collection,
+    doc,
+    getDocs,
+    runTransaction,
+    serverTimestamp,
+    query,
+    orderBy,
+    getDoc,
+} from 'firebase/firestore';
+import type { BasePoem, LikedPoem, Poem } from '../utils/types';
 
 export function getLikeId(poem: BasePoem): string {
-	return encodeURIComponent(`${poem.title}::${poem.author}::${poem.numLines}`)
+    return encodeURIComponent(`${poem.title}::${poem.author}::${poem.numLines}`);
+}
+
+export function getLikeIdFromSlug(slug: string): string {
+    return encodeURIComponent(slug);
 }
 
 export async function likePoem(poem: Poem) {
-	const uid = auth.currentUser?.uid
-	if (!uid) {
-		throw new Error("User is not logged in")
-	}
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+        throw new Error('User is not logged in');
+    }
 
-	const userRef = doc(db, "users", uid)
-	const likeId = getLikeId(poem)
-	const likeRef = doc(db, "users", uid, "likes", likeId)
+    const userRef = doc(db, 'users', uid);
+    const likeId = getLikeId(poem);
+    const likeRef = doc(db, 'users', uid, 'likes', likeId);
 
-	await runTransaction(db, async (transaction) => {
-		const likeSnap = await transaction.get(likeRef)
-		const userSnap = await transaction.get(userRef)
+    await runTransaction(db, async (transaction) => {
+        const likeSnap = await transaction.get(likeRef);
+        const userSnap = await transaction.get(userRef);
 
-		if (!likeSnap.exists()) {
-			// Add the like
-			transaction.set(likeRef, {
-				title: poem.title,
-				author: poem.author,
-				numLines: poem.numLines,
-				peekLines: poem.lines.slice(0, 4),
-				createdAt: serverTimestamp()
-			})
+        if (!likeSnap.exists()) {
+            // Add the like
+            transaction.set(likeRef, {
+                title: poem.title,
+                author: poem.author,
+                numLines: poem.numLines,
+                peekLines: poem.lines.slice(0, 4),
+                createdAt: serverTimestamp(),
+            });
 
-			// Increment likeCount on user doc
-			const currentCount = userSnap.exists()
-				? userSnap.data().likeCount || 0
-				: 0
+            // Increment likeCount on user doc
+            const currentCount = userSnap.exists() ? userSnap.data().likeCount || 0 : 0;
 
-			transaction.update(userRef, {
-				likeCount: currentCount + 1
-			})
-		}
-	})
+            transaction.update(userRef, {
+                likeCount: currentCount + 1,
+            });
+        }
+    });
 
-	return true
+    return true;
 }
 
 export async function unlikePoem(poem: Poem) {
-	const uid = auth.currentUser?.uid
-	if (!uid) {
-		throw new Error("User is not logged in")
-	}
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+        throw new Error('User is not logged in');
+    }
 
-	const userRef = doc(db, "users", uid)
-	const likeId = getLikeId(poem)
-	const likeRef = doc(db, "users", uid, "likes", likeId)
+    const userRef = doc(db, 'users', uid);
+    const likeId = getLikeId(poem);
+    const likeRef = doc(db, 'users', uid, 'likes', likeId);
 
-	await runTransaction(db, async (transaction) => {
-		const likeSnap = await transaction.get(likeRef)
-		const userSnap = await transaction.get(userRef)
+    await runTransaction(db, async (transaction) => {
+        const likeSnap = await transaction.get(likeRef);
+        const userSnap = await transaction.get(userRef);
 
-		if (likeSnap.exists()) {
-			transaction.delete(likeRef)
+        if (likeSnap.exists()) {
+            transaction.delete(likeRef);
 
-			// Decrement likeCount on user doc
-			const currentCount = userSnap.exists()
-				? userSnap.data().likeCount || 0
-				: 0
+            // Decrement likeCount on user doc
+            const currentCount = userSnap.exists() ? userSnap.data().likeCount || 0 : 0;
 
-			transaction.update(userRef, {
-				likeCount: Math.max(currentCount - 1, 0) // prevent negative count
-			})
-		}
-	})
+            transaction.update(userRef, {
+                likeCount: Math.max(currentCount - 1, 0), // prevent negative count
+            });
+        }
+    });
 
-	return true
+    return true;
 }
 
 export async function getAllLikedPoems(): Promise<Array<LikedPoem>> {
-	const uid = auth.currentUser?.uid
-	if (!uid) {
-		throw new Error("User is not logged in")
-	}
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+        throw new Error('User is not logged in');
+    }
 
-	const likesRef = collection(db, "users", uid, "likes")
+    const likesRef = collection(db, 'users', uid, 'likes');
 
-	// Initial order: sort by createdAt (descending = newest first)
-	const q = query(likesRef, orderBy("createdAt", "desc"))
+    // Initial order: sort by createdAt (descending = newest first)
+    const q = query(likesRef, orderBy('createdAt', 'desc'));
 
-	const snapshot = await getDocs(q)
+    const snapshot = await getDocs(q);
 
-	return snapshot.docs.map((doc) => {
-		return {
-			...(doc.data() as LikedPoem)
-		}
-	})
+    return snapshot.docs.map((doc) => {
+        return {
+            ...(doc.data() as LikedPoem),
+        };
+    });
 }
 
 export async function poemIsLiked(poem: Poem): Promise<boolean> {
-	const uid = auth.currentUser?.uid
-	if (!uid) {
-		throw new Error("User is not logged in")
-	}
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+        throw new Error('User is not logged in');
+    }
 
-	const likeId = getLikeId(poem)
-	const likeRef = doc(db, "users", uid, "likes", likeId)
+    const likeId = getLikeId(poem);
+    const likeRef = doc(db, 'users', uid, 'likes', likeId);
 
-	const likeSnap = await getDoc(likeRef)
-	return likeSnap.exists()
+    const likeSnap = await getDoc(likeRef);
+    return likeSnap.exists();
 }
