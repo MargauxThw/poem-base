@@ -12,6 +12,8 @@ import {
     SheetTrigger,
 } from '@/components/ui/sheet';
 import LineHeightSlider from './sliders/LineHeightSlider';
+import { Button } from './ui/button';
+import { Palette } from 'lucide-react';
 
 type NavBarProps = {
     updateFont: (newIndex: number) => void;
@@ -53,7 +55,12 @@ export default function NavBar({
             <Link to="/my-poems">My Poems</Link>
             <Link to="/account">Account</Link>
             <Sheet>
-                <SheetTrigger>Open</SheetTrigger>
+                <SheetTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                        <Palette />
+                        <span className="sr-only">Edit theme</span>
+                    </Button>
+                </SheetTrigger>
                 <SheetContent className="w-[400px] sm:w-[540px] p-4">
                     <SheetHeader>
                         <SheetTitle>Are you absolutely sure?</SheetTitle>
