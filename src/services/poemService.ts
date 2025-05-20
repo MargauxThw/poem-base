@@ -1,81 +1,90 @@
-import type { Poem } from "../utils/types"
+import type { Poem } from '../utils/types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function intersectSets(setA: Set<number>, setB: Set<number>): number[] {
-	// Use the smaller set for iteration to optimize performance
-	if (setB.size < setA.size) [setA, setB] = [setB, setA]
+    // Use the smaller set for iteration to optimize performance
+    if (setB.size < setA.size) [setA, setB] = [setB, setA];
 
-	return [...setA].filter((item) => setB.has(item))
+    return [...setA].filter((item) => setB.has(item));
+}
+
+function getPoemFromCache(slug: string): Poem | null {
+    const poem = localStorage.getItem(slug);
+    if (poem) {
+        console.log('Poem found in cache', slug);
+        return JSON.parse(poem);
+    }
+    console.log('Poem not found in cache', slug);
+    return null;
 }
 
 export async function getPoemBySlug(slug: string): Promise<Poem | null> {
-	const params = slug.split("::")
-	const url = `https://poetrydb.org/title,author/${encodeURIComponent(
-		params[0]
-	)}:abs;${encodeURIComponent(params[1])}:abs`
+    const poem = getPoemFromCache(slug);
+    if (poem) {
+        return poem;
+    }
 
-	console.log(url, "URL")
-	try {
-		const response = await fetch(url).then((res) => {
-			if (!res.ok) {
-				throw new Error(
-					`Error fetching poem with slug ${slug}: ${res.statusText}`
-				)
-			}
-			return res.json()
-		})
+    const params = slug.split('::');
+    const url = `https://poetrydb.org/title,author/${encodeURIComponent(
+        params[0]
+    )}:abs;${encodeURIComponent(params[1])}:abs`;
 
-		console.log("RESPONSE: ", response)
+    console.log(url, 'URL');
+    try {
+        const response = await fetch(url).then((res) => {
+            if (!res.ok) {
+                throw new Error(`Error fetching poem with slug ${slug}: ${res.statusText}`);
+            }
+            return res.json();
+        });
 
-		if (response && response.length > 0) {
-			const poemData = response[0]
-			const poem: Poem = {
-				title: poemData.title,
-				author: poemData.author,
-				numLines: poemData.linecount,
-				lines: poemData.lines
-			}
-			return poem
-		} else {
-			return null
-		}
-	} catch (error) {
-		console.error(error)
-		return null
-	}
+        console.log('RESPONSE: ', response);
+
+        if (response && response.length > 0) {
+            const poemData = response[0];
+            const poem: Poem = {
+                title: poemData.title,
+                author: poemData.author,
+                numLines: poemData.linecount,
+                lines: poemData.lines,
+            };
+            console.log('Poem added to cache', slug);
+            localStorage.setItem(slug, JSON.stringify(poem));
+            return poem;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 }
 
 export async function getRandomPoem(poem: Poem | null): Promise<Poem | null> {
-	// TODO: Add passing filters and make it not just 10 line poems
-	try {
-		const response = await fetch("https://poetrydb.org/linecount/10")
-		const data = await response.json()
-		if (data && data.length > 0) {
-			let randomPoem = data[(Math.random() * data.length) | 0]
-			while (
-				poem != null &&
-				randomPoem.title === poem.title &&
-				data.length > 1
-			) {
-				randomPoem = data[(Math.random() * data.length) | 0]
-			}
+    // TODO: Add passing filters and make it not just 10 line poems
+    try {
+        const response = await fetch('https://poetrydb.org/linecount/10');
+        const data = await response.json();
+        if (data && data.length > 0) {
+            let randomPoem = data[(Math.random() * data.length) | 0];
+            while (poem != null && randomPoem.title === poem.title && data.length > 1) {
+                randomPoem = data[(Math.random() * data.length) | 0];
+            }
 
-			const fetchedPoem: Poem = {
-				title: randomPoem.title,
-				author: randomPoem.author,
-				numLines: randomPoem.lines.filter(
-					(line: string) => line.trim() !== ""
-				).length,
-				lines: randomPoem.lines
-			}
+            const fetchedPoem: Poem = {
+                title: randomPoem.title,
+                author: randomPoem.author,
+                numLines: randomPoem.lines.filter((line: string) => line.trim() !== '').length,
+                lines: randomPoem.lines,
+            };
 
-			return fetchedPoem
-		}
-	} catch (error) {
-		console.error("Error fetching random poem:", error)
-		return null
-	}
-	return null
+            return fetchedPoem;
+        }
+    } catch (error) {
+        console.error('Error fetching random poem:', error);
+        return null;
+    }
+    return null;
 }
 
 // export async function getInvalidLineCounts() {
