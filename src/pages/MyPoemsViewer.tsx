@@ -13,8 +13,8 @@ export default function MyPoemsViewer() {
     const [currentIndex, setCurrentIndex] = useState(-1);
     const [poem, setPoem] = useState<Poem | null>(null);
     const [isUnliked, setIsUnliked] = useState(false);
+    const [likeLoading, setLikeLoading] = useState(false);
 
-    // Fetch poems and set order from localStorage or DB
     const fetchPoems = useCallback(async () => {
         console.log('Running fetchPoems');
 
@@ -42,12 +42,12 @@ export default function MyPoemsViewer() {
 
     useEffect(() => {
         setIsUnliked(false);
+        setLikeLoading(false);
         fetchPoems();
     }, [fetchPoems]);
 
     const handleLikeChange = async () => {
         if (poem === null) return;
-
         if (isUnliked) {
             setIsUnliked(false);
             localStorage.setItem('likedPoems', JSON.stringify(poems));
@@ -56,11 +56,17 @@ export default function MyPoemsViewer() {
             const newLikedPoems = poems.filter((_p, index) => index !== currentIndex);
             localStorage.setItem('likedPoems', JSON.stringify(newLikedPoems));
         }
+        setLikeLoading(false);
     };
 
-    function getNavPoemLikeId(direction: 'next' | 'prev') {
+    const navToNewPoem = (direction: 'next' | 'prev') => {
         console.log('Running getNavPoemLikeId', direction);
         const localPoems = JSON.parse(localStorage.getItem('likedPoems') || '[]');
+        if (!localPoems || localPoems.length === 0) {
+            navigate('/my-poems');
+            return;
+        }
+
         let new_index = currentIndex;
         if (direction === 'next') {
             new_index = !isUnliked ? currentIndex + 1 : currentIndex;
@@ -74,9 +80,8 @@ export default function MyPoemsViewer() {
             new_index = 0;
         }
         console.log('New index', isUnliked, currentIndex, new_index, localPoems, poems);
-
-        return getLikeId(localPoems[new_index]);
-    }
+        navigate(`/my-poems/viewer/${getLikeId(localPoems[new_index])}`);
+    };
 
     if (!poems.length) return <div>No liked poems.</div>;
 
@@ -89,14 +94,22 @@ export default function MyPoemsViewer() {
                 {currentIndex + 1} of {poems.length}
             </div>
             <PoemLayout poem={poem} />
-            {poem && <LikeButton poem={poem} onLikeChange={handleLikeChange} />}
+
+            {poem && (
+                <LikeButton
+                    poem={poem}
+                    onLikeChange={handleLikeChange}
+                    initiateLikeLoading={() => setLikeLoading(true)}
+                />
+            )}
             <div style={{ marginTop: 16 }}>
-                <button onClick={() => navigate(`/my-poems/viewer/${getNavPoemLikeId('prev')}`)}>
+                <button onClick={() => navToNewPoem('prev')} disabled={likeLoading}>
                     Previous
                 </button>
                 <button
-                    onClick={() => navigate(`/my-poems/viewer/${getNavPoemLikeId('next')}`)}
+                    onClick={() => navToNewPoem('next')}
                     style={{ marginLeft: 8 }}
+                    disabled={likeLoading}
                 >
                     Next
                 </button>

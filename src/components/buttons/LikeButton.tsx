@@ -4,10 +4,11 @@ import { likePoem, poemIsLiked, unlikePoem } from '../../services/likeService';
 
 type LikeButtonProps = {
     poem: Poem;
+    initiateLikeLoading?: () => void;
     onLikeChange?: () => void; // Optional callback function to be called when the like state changes
 };
 
-export default function LikeButton({ poem, onLikeChange }: LikeButtonProps) {
+export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: LikeButtonProps) {
     const [isLiked, setIsLiked] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -30,6 +31,7 @@ export default function LikeButton({ poem, onLikeChange }: LikeButtonProps) {
 
     const handleClick = async () => {
         setIsLoading(true); // Set loading to true while processing the like/unlike
+        if (initiateLikeLoading) initiateLikeLoading();
 
         if (isLiked) {
             // Optimistically set the state to false before the API call
