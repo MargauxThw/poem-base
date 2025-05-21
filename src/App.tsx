@@ -7,12 +7,12 @@ import SignUp from './pages/SignUp.tsx';
 import MyPoems from './pages/MyPoems.tsx';
 import PoemPage from './pages/Poem.tsx';
 import MyPoemsViewer from './pages/MyPoemsViewer';
-import { useEffect, useState } from 'react';
+import { FONT_OPTIONS, THEME_OPTIONS } from './utils/staticData.ts';
+import { useState } from 'react';
 import Account from './pages/Account';
 import GlobalNav from './components/nav/GlobalNav.tsx';
 import Browse from './pages/Browse.tsx';
 import Random from './pages/Random.tsx';
-import { FONT_OPTIONS, THEME_OPTIONS } from './utils/staticData.ts';
 
 export default function App() {
     const [fontIndex, setFontIndex] = useState(() => {
@@ -35,38 +35,25 @@ export default function App() {
         return stored ? Number(stored) : 1.5;
     });
 
-    const updateFont = (newIndex: number) => {
+    function updateFont(newIndex: number) {
         setFontIndex(newIndex);
         localStorage.setItem('font_index', String(newIndex));
-        const font_classes = FONT_OPTIONS.map((f) => f.class);
-        document.body.classList.remove(...font_classes);
-        document.body.classList.add(font_classes[newIndex]);
-    };
+    }
 
-    const updateTheme = (newIndex: number) => {
+    function updateTheme(newIndex: number) {
         setThemeIndex(newIndex);
         localStorage.setItem('theme_index', String(newIndex));
-        const theme_classes = THEME_OPTIONS.map((t) => t.class);
-        document.body.classList.remove(...theme_classes);
-        document.body.classList.add(theme_classes[newIndex]);
-    };
+    }
 
-    const updateLineHeight = (newSize: number) => {
-        console.log(newSize);
+    function updateLineHeight(newSize: number) {
         setLineHeight(newSize);
         localStorage.setItem('line_height', String(newSize));
-    };
+    }
 
-    const updateFontSize = (newSize: number) => {
+    function updateFontSize(newSize: number) {
         setFontSize(newSize);
         localStorage.setItem('font_size', String(newSize));
-    };
-
-    // Example in App.tsx
-    useEffect(() => {
-        updateFont(fontIndex);
-        updateTheme(themeIndex);
-    }, []);
+    }
 
     return (
         <BrowserRouter>
@@ -85,6 +72,9 @@ export default function App() {
 
             <div
                 style={{
+                    fontFamily: FONT_OPTIONS[fontIndex].value,
+                    background: THEME_OPTIONS[themeIndex].background,
+                    color: THEME_OPTIONS[themeIndex].color,
                     width: '100vw',
                     fontSize: `${fontSize}%`,
                     lineHeight: `${lineHeight}em`,
