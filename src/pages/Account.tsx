@@ -75,7 +75,14 @@ export default function Account() {
                 </div>
             </div>
 
-            <div className="bg-white shadow rounded-lg p-6 mb-6">
+            <div
+                className="shadow rounded-lg p-6 mb-6 border"
+                style={{
+                    backgroundColor: 'var(--background)',
+                    borderColor: 'var(--color-border)',
+                    boxShadow: '0 0px 12px 0 var(--shadow-color)',
+                }}
+            >
                 <h2 className="text-xl font-semibold mb-4">Account Actions</h2>
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">

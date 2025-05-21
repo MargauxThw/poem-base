@@ -8,7 +8,7 @@ import MyPoems from './pages/MyPoems.tsx';
 import PoemPage from './pages/Poem.tsx';
 import MyPoemsViewer from './pages/MyPoemsViewer';
 import { FONT_OPTIONS, THEME_OPTIONS } from './utils/staticData.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Account from './pages/Account';
 import GlobalNav from './components/nav/GlobalNav.tsx';
 import Browse from './pages/Browse.tsx';
@@ -22,7 +22,11 @@ export default function App() {
 
     const [themeIndex, setThemeIndex] = useState(() => {
         const stored = localStorage.getItem('theme_index');
-        return stored ? Number(stored) : 0;
+        return stored
+            ? Number(stored)
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 1
+              : 0;
     });
 
     const [fontSize, setFontSize] = useState(() => {
@@ -35,25 +39,36 @@ export default function App() {
         return stored ? Number(stored) : 1.5;
     });
 
-    function updateFont(newIndex: number) {
+    const updateFont = (newIndex: number) => {
         setFontIndex(newIndex);
         localStorage.setItem('font_index', String(newIndex));
-    }
+        const font_classes = FONT_OPTIONS.map((f) => f.class);
+        document.body.classList.remove(...font_classes);
+        document.body.classList.add(font_classes[newIndex]);
+    };
 
-    function updateTheme(newIndex: number) {
+    const updateTheme = (newIndex: number) => {
         setThemeIndex(newIndex);
         localStorage.setItem('theme_index', String(newIndex));
-    }
+        const theme_classes = THEME_OPTIONS.map((t) => t.class);
+        document.body.classList.remove(...theme_classes);
+        document.body.classList.add(theme_classes[newIndex]);
+    };
 
-    function updateLineHeight(newSize: number) {
+    const updateLineHeight = (newSize: number) => {
         setLineHeight(newSize);
         localStorage.setItem('line_height', String(newSize));
-    }
+    };
 
-    function updateFontSize(newSize: number) {
+    const updateFontSize = (newSize: number) => {
         setFontSize(newSize);
         localStorage.setItem('font_size', String(newSize));
-    }
+    };
+
+    useEffect(() => {
+        updateFont(fontIndex);
+        updateTheme(themeIndex);
+    }, []);
 
     return (
         <BrowserRouter>
@@ -67,14 +82,9 @@ export default function App() {
                 updateLineHeight={updateLineHeight}
                 lineHeight={lineHeight}
             />
-            {/* TODO: Add some options for line height ALSO fix nav bar and move all of this into a pop-up */}
-            {/* TODO: Experiment with just doing it for the poem text (not buttons) */}
 
             <div
                 style={{
-                    fontFamily: FONT_OPTIONS[fontIndex].value,
-                    background: THEME_OPTIONS[themeIndex].background,
-                    color: THEME_OPTIONS[themeIndex].color,
                     width: '100vw',
                     fontSize: `${fontSize}%`,
                     lineHeight: `${lineHeight}em`,

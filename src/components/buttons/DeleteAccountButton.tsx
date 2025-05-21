@@ -11,12 +11,15 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '../ui/alert-dialog';
+import { Button } from '../ui/button';
 export default function DeleteAccountButton() {
     const [isDeleting, setIsDeleting] = useState(false);
 
     return (
         <AlertDialog open={isDeleting} onOpenChange={setIsDeleting}>
-            <AlertDialogTrigger>Delete Account</AlertDialogTrigger>
+            <AlertDialogTrigger asChild>
+                <Button variant="destructive">Delete Account</Button>
+            </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

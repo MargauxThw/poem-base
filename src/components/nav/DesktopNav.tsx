@@ -28,7 +28,7 @@ export default function DesktopNav() {
                         'transition-colors hover:text-foreground/80',
                         pathname?.startsWith('/random')
                             ? 'font-bold border-b-2 border-b-primary'
-                            : 'text-foreground/80'
+                            : 'font-semibold text-foreground/100'
                     )}
                 >
                     Random
@@ -39,7 +39,7 @@ export default function DesktopNav() {
                         'transition-colors hover:text-foreground/80',
                         pathname?.startsWith('/browse')
                             ? 'font-bold border-b-2 border-b-primary'
-                            : 'text-foreground/80'
+                            : 'font-semibold text-foreground/100'
                     )}
                 >
                     Browse
@@ -51,7 +51,7 @@ export default function DesktopNav() {
                             'transition-colors hover:text-foreground/80',
                             pathname?.startsWith('/my-poems')
                                 ? 'font-bold border-b-2 border-b-primary'
-                                : 'text-foreground/80'
+                                : 'font-semibold text-foreground/100'
                         )}
                     >
                         My Poems

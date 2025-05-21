@@ -5,6 +5,7 @@ import type { LikedPoem, Poem } from '../utils/types';
 import LikeButton from '../components/buttons/LikeButton';
 import { getPoemBySlug } from '@/services/poemService';
 import PoemLayout from '@/components/PoemLayout';
+import { Button } from '@/components/ui/button';
 
 export default function MyPoemsViewer() {
     const { slug } = useParams<{ slug: string }>();
@@ -103,16 +104,21 @@ export default function MyPoemsViewer() {
                 />
             )}
             <div style={{ marginTop: 16 }}>
-                <button onClick={() => navToNewPoem('prev')} disabled={likeLoading}>
+                <Button
+                    variant={'outline'}
+                    onClick={() => navToNewPoem('prev')}
+                    disabled={likeLoading}
+                >
                     Previous
-                </button>
-                <button
+                </Button>
+                <Button
+                    variant={'outline'}
                     onClick={() => navToNewPoem('next')}
                     style={{ marginLeft: 8 }}
                     disabled={likeLoading}
                 >
                     Next
-                </button>
+                </Button>
             </div>
         </div>
     );

@@ -28,7 +28,7 @@ export default function LineHeightSlider({
 					step={0.1}
 					value={value}
 					onValueChange={handleValueChange}
-					className="flex-grow"
+					className="grow"
 				/>
 				<p style={{ fontSize: "1.5em", width: "36px", textAlign: "right" }}>| |</p>
 			</div>

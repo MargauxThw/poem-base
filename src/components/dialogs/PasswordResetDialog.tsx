@@ -10,6 +10,7 @@ import {
     DialogTrigger,
 } from '../ui/dialog';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import { Button } from '../ui/button';
 
 interface PasswordResetDialogProps {
     onPasswordUpdate: (length: number) => void;
@@ -78,9 +79,7 @@ export default function PasswordResetDialog({ onPasswordUpdate }: PasswordResetD
     return (
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
-                <button className="text-sm text-indigo-600 hover:text-indigo-800">
-                    Reset Password
-                </button>
+                <Button variant="outline">Reset Password</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>

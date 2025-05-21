@@ -1,5 +1,7 @@
 import type { Poem } from '../../utils/types';
 import { getRandomPoem } from '../../services/poemService';
+import { Button } from '../ui/button';
+import { Shuffle } from 'lucide-react';
 
 type RandomPoemButtonProps = {
     setNewPoem: (poem: Poem | null) => void;
@@ -12,5 +14,9 @@ export default function RandomPoemButton({ setNewPoem, poem }: RandomPoemButtonP
         setNewPoem(fetchedPoem);
     };
 
-    return <button onClick={handleClick}>Get Random Poem</button>;
+    return (
+        <Button onClick={handleClick} variant="outline" size="icon">
+            <Shuffle />
+        </Button>
+    );
 }
