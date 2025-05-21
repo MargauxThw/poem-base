@@ -5,7 +5,7 @@ import Login from './pages/Login.tsx';
 import Home from './pages/Home.tsx';
 import SignUp from './pages/SignUp.tsx';
 import MyPoems from './pages/MyPoems.tsx';
-import PoemPage from './pages/Poem.tsx';
+// import PoemPage from './pages/Poem.tsx';
 import MyPoemsViewer from './pages/MyPoemsViewer';
 import { FONT_OPTIONS, THEME_OPTIONS } from './utils/staticData.ts';
 import { useEffect, useState } from 'react';
@@ -112,7 +112,7 @@ export default function App() {
                             </ProtectedRoute>
                         }
                     />
-                    <Route path="/poem/:slug" element={<PoemPage />} />
+                    {/* <Route path="/poem/:slug" element={<PoemPage />} /> */}
                     <Route
                         path="/my-poems/viewer/:slug"
                         element={

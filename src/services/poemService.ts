@@ -1,4 +1,5 @@
-import type { Poem } from '../utils/types';
+import { validLineCounts } from '@/utils/staticData';
+import type { Poem, PoemFilter } from '../utils/types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function intersectSets(setA: Set<number>, setB: Set<number>): number[] {
@@ -8,7 +9,7 @@ function intersectSets(setA: Set<number>, setB: Set<number>): number[] {
     return [...setA].filter((item) => setB.has(item));
 }
 
-function getPoemFromCache(slug: string): Poem | null {
+const getPoemFromCache = (slug: string): Poem | null => {
     const poem = localStorage.getItem(slug);
     if (poem) {
         console.log('Poem found in cache', slug);
@@ -16,9 +17,46 @@ function getPoemFromCache(slug: string): Poem | null {
     }
     console.log('Poem not found in cache', slug);
     return null;
+};
+
+export function getLocalStorageFilters(urlSuffix?: string): PoemFilter {
+    const filters: PoemFilter = {};
+
+    const linesStart = localStorage.getItem('linesStart' + (urlSuffix ?? ''));
+    const linesEnd = localStorage.getItem('linesEnd' + (urlSuffix ?? ''));
+    const titleText = localStorage.getItem('titleText' + (urlSuffix ?? ''));
+    const titleAbs = localStorage.getItem('titleAbs' + (urlSuffix ?? ''));
+    const authorText = localStorage.getItem('authorText' + (urlSuffix ?? ''));
+    const authorAbs = localStorage.getItem('authorAbs' + (urlSuffix ?? ''));
+
+    if (linesStart && Number.parseInt(linesStart)) {
+        filters.linesStart = Number.parseInt(linesStart);
+    }
+
+    if (linesEnd && Number.parseInt(linesEnd)) {
+        filters.linesEnd = Number.parseInt(linesEnd);
+    }
+
+    if (titleText) {
+        filters.titleText = titleText;
+    }
+
+    if (authorText) {
+        filters.authorText = authorText;
+    }
+
+    if (titleAbs === 'true') {
+        filters.titleAbs = true;
+    }
+
+    if (authorAbs === 'true') {
+        filters.authorAbs = true;
+    }
+
+    return filters;
 }
 
-export async function getPoemBySlug(slug: string): Promise<Poem | null> {
+export const getPoemBySlug = async (slug: string): Promise<Poem | null> => {
     const poem = getPoemFromCache(slug);
     if (poem) {
         return poem;
@@ -58,9 +96,9 @@ export async function getPoemBySlug(slug: string): Promise<Poem | null> {
         console.error(error);
         return null;
     }
-}
+};
 
-export async function getRandomPoem(poem: Poem | null): Promise<Poem | null> {
+export const getRandomPoem = async (poem: Poem | null): Promise<Poem | null> => {
     // TODO: Add passing filters and make it not just 10 line poems
     try {
         const response = await fetch('https://poetrydb.org/linecount/10');
@@ -85,7 +123,85 @@ export async function getRandomPoem(poem: Poem | null): Promise<Poem | null> {
         return null;
     }
     return null;
-}
+};
+
+export const fetchNewRandomFilteredPoems = async (
+    poemFilter: PoemFilter,
+    forSearchDefault?: boolean
+): Promise<Array<Poem> | string> => {
+    const baseUrl = 'https://poetrydb.org';
+
+    let inputFields = '';
+    let searchTerms = '';
+    if (
+        poemFilter.linesStart &&
+        poemFilter.linesEnd &&
+        poemFilter.linesStart == poemFilter.linesEnd
+    ) {
+        inputFields += 'linecount,';
+        searchTerms += `${poemFilter.linesStart};`;
+    } else if (poemFilter.linesStart || poemFilter.linesEnd) {
+        inputFields += 'linecount,';
+        const start = poemFilter.linesStart ?? 1;
+        const end = poemFilter.linesEnd ?? 10000;
+        const validInRange = Array.from(validLineCounts).filter((n) => n >= start && n <= end);
+
+        let randomLineCount = -1;
+        if (validInRange.length > 0) {
+            randomLineCount = validInRange[Math.floor(Math.random() * validInRange.length)];
+        } else {
+            return 'No poems could be found within the line ranges selected. Try adjusting the filters.';
+        }
+
+        searchTerms += `${randomLineCount};`;
+    }
+
+    if (poemFilter.authorText) {
+        poemFilter.authorText = poemFilter.authorText.replace(' ', '%20');
+        inputFields += 'author,';
+        searchTerms += `${poemFilter.authorText}${
+            poemFilter.authorAbs != null ? (poemFilter.authorAbs == true ? ':abs' : '') : ''
+        };`;
+    }
+
+    if (poemFilter.titleText) {
+        poemFilter.titleText = poemFilter.titleText.replace(' ', '%20');
+        inputFields += 'title,';
+        searchTerms += `${poemFilter.titleText}${
+            poemFilter.titleAbs != null ? (poemFilter.titleAbs == true ? ':abs' : '') : ''
+        };`;
+    }
+
+    let responseTail = '';
+    if (inputFields.length > 0 || poemFilter.linesStart || poemFilter.linesEnd) {
+        inputFields = inputFields.slice(0, -1);
+        if (inputFields.length > 0) {
+            responseTail = `/${inputFields}/${searchTerms}`;
+        } else {
+            responseTail = '/random';
+        }
+    } else {
+        responseTail = forSearchDefault ? '/random/10' : '/random';
+    }
+
+    try {
+        console.log(baseUrl + responseTail);
+        const response = await fetch(baseUrl + responseTail);
+        const poems = await response.json();
+
+        // console.log(poems, poems.length);
+
+        if (poems && poems.length > 0) {
+            console.log('Poems found:', poems);
+            return poems;
+        } else {
+            return 'No poems could be found. Try adjusting the filters.';
+        }
+    } catch (error) {
+        console.error(error);
+        return 'An error has occured, try again later';
+    }
+};
 
 // export async function getInvalidLineCounts() {
 //     console.log("Checking for invalid line counts...")
