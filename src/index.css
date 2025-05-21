@@ -12,6 +12,7 @@
     font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
+    min-height: 100vh;
 
     color-scheme: light dark;
 
@@ -27,7 +28,19 @@ body {
     display: flex;
     place-items: center;
     min-width: 320px;
-    min-height: 100vh;
+}
+
+.font-theme-serif {
+    font-family: 'Literata', serif;
+}
+.font-theme-sans {
+    font-family: 'Inter', sans-serif;
+}
+.font-theme-mono {
+    font-family: 'IBM Plex Mono', monospace;
+}
+.font-theme-accessible {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
 }
 
 @theme inline {
