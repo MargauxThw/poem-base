@@ -8,7 +8,7 @@ import MyPoems from './pages/MyPoems.tsx';
 import PoemPage from './pages/Poem.tsx';
 import MyPoemsViewer from './pages/MyPoemsViewer';
 import { FONT_OPTIONS, THEME_OPTIONS } from './utils/staticData.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Account from './pages/Account';
 import GlobalNav from './components/nav/GlobalNav.tsx';
 import Browse from './pages/Browse.tsx';
@@ -65,6 +65,11 @@ export default function App() {
         localStorage.setItem('font_size', String(newSize));
     };
 
+    useEffect(() => {
+        updateFont(fontIndex);
+        updateTheme(themeIndex);
+    }, []);
+
     return (
         <BrowserRouter>
             <GlobalNav
@@ -77,14 +82,9 @@ export default function App() {
                 updateLineHeight={updateLineHeight}
                 lineHeight={lineHeight}
             />
-            {/* TODO: Add some options for line height ALSO fix nav bar and move all of this into a pop-up */}
-            {/* TODO: Experiment with just doing it for the poem text (not buttons) */}
 
             <div
                 style={{
-                    // fontFamily: FONT_OPTIONS[fontIndex].value,
-                    // background: THEME_OPTIONS[themeIndex].background,
-                    // color: THEME_OPTIONS[themeIndex].color,
                     width: '100vw',
                     fontSize: `${fontSize}%`,
                     lineHeight: `${lineHeight}em`,
