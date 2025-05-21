@@ -29,7 +29,7 @@ export const FONT_OPTIONS = [
 
 export const THEME_OPTIONS = [
     { class: 'theme-light', label: 'light', background: '#FFFFFF', color: '#222222' },
-    { class: 'theme-dark', label: 'dark', background: '#242424', color: '#FFFFFF' },
+    { class: 'dark', label: 'dark', background: '#242424', color: '#FFFFFF' },
     { class: 'theme-sepia', label: 'sepia', background: '#F9EFDA', color: '#594334' },
     { class: 'theme-blue', label: 'blue', background: '#DDEBF4', color: '#2B3440' },
     { class: 'theme-green', label: 'green', background: '#CCE6D0', color: '#3D4B43' },

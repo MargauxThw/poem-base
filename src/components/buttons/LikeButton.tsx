@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { Poem } from '../../utils/types';
 import { likePoem, poemIsLiked, unlikePoem } from '../../services/likeService';
+import { Button } from '../ui/button';
+import { Heart } from 'lucide-react';
 
 type LikeButtonProps = {
     poem: Poem;
@@ -72,9 +74,9 @@ export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: 
     return (
         <>
             {poem.title.length > 0 ? (
-                <button onClick={handleClick} disabled={isLoading}>
-                    {isLiked ? 'Unlike' : 'Like'}
-                </button>
+                <Button variant="outline" size="icon" onClick={handleClick} disabled={isLoading}>
+                    <Heart fill={isLiked ? 'red' : 'var(--foreground)'} stroke="none" />
+                </Button>
             ) : (
                 <></>
             )}

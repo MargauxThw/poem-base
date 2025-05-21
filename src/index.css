@@ -3,7 +3,7 @@
 
 /* @custom-variant dark (&:is(.dark *)); */
 @custom-variant theme-light (&:is(.theme-light *));
-@custom-variant theme-dark (&:is(.theme-dark *));
+@custom-variant dark (&:is(.dark *));
 @custom-variant theme-sepia (&:is(.theme-sepia *));
 @custom-variant theme-blue (&:is(.theme-blue *));
 @custom-variant theme-green (&:is(.theme-green *));
@@ -21,6 +21,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     --radius: 0.625rem;
+    --destructive: #ff0000;
+    --destructive-foreground: #fff;
 }
 
 body {
@@ -97,15 +99,15 @@ body {
     --muted-foreground: #666;
     --accent: #e0e7ff;
     --accent-foreground: #1e78ba;
-    --destructive: #ffeded;
-    --destructive-foreground: #b91c1c;
+    /* --destructive: #ffeded;
+    --destructive-foreground: #b91c1c; */
     --border: #e5e7eb;
     --input: #e5e7eb;
     --ring: #1e78ba;
     --sidebar: #fff;
 }
 
-.theme-dark {
+.dark {
     --background: #242424;
     --foreground: #fff;
     --card: #23272f;
@@ -120,8 +122,8 @@ body {
     --muted-foreground: #a0aec0;
     --accent: #334155;
     --accent-foreground: #60a5fa;
-    --destructive: #7f1d1d;
-    --destructive-foreground: #fff;
+    /* --destructive: #7f1d1d;
+    --destructive-foreground: #fff; */
     --border: #3a3a3a;
     --input: #3a3a3a;
     --ring: #60a5fa;
@@ -141,8 +143,8 @@ body {
     --muted-foreground: #7c5e4a;
     --accent: #e6ccb2;
     --accent-foreground: #b08968;
-    --destructive: #eabf99;
-    --destructive-foreground: #7c5e4a;
+    /* --destructive: #eabf99;
+    --destructive-foreground: #7c5e4a; */
     --border: #e6ccb2;
     --input: #e6ccb2;
     --ring: #b08968;
@@ -162,8 +164,8 @@ body {
     --muted-foreground: #4b5c6b;
     --accent: #a7c7e7;
     --accent-foreground: #1e78ba;
-    --destructive: #e0b4b4;
-    --destructive-foreground: #7c2d12;
+    /* --destructive: #e0b4b4;
+    --destructive-foreground: #7c2d12; */
     --border: #b6cbe1;
     --input: #b6cbe1;
     --ring: #1e78ba;
@@ -183,8 +185,8 @@ body {
     --muted-foreground: #4b5c4b;
     --accent: #b2d8b6;
     --accent-foreground: #3ba66b;
-    --destructive: #e0b4b4;
-    --destructive-foreground: #7c2d12;
+    /* --destructive: #e0b4b4;
+    --destructive-foreground: #7c2d12; */
     --border: #a3cfa6;
     --input: #a3cfa6;
     --ring: #3ba66b;

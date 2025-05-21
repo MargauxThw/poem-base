@@ -17,11 +17,8 @@ export default function ThemeButton({ index, currentThemeIndex, updateTheme }: T
             style={{
                 border: '1px solid #ccc',
                 borderRadius: '100px',
-                height: '48px',
-                width: '48px',
-                minWidth: '48px',
-                maxWidth: '48px',
-                minHeight: '48px',
+                height: '36px',
+                width: '36px',
                 outline: currentThemeIndex === index ? '2px solid #1E78BA' : 'none',
                 background: THEME_OPTIONS[index].background,
             }}
