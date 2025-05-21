@@ -22,7 +22,11 @@ export default function App() {
 
     const [themeIndex, setThemeIndex] = useState(() => {
         const stored = localStorage.getItem('theme_index');
-        return stored ? Number(stored) : 0;
+        return stored
+            ? Number(stored)
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 1
+              : 0;
     });
 
     const [fontSize, setFontSize] = useState(() => {
@@ -35,25 +39,31 @@ export default function App() {
         return stored ? Number(stored) : 1.5;
     });
 
-    function updateFont(newIndex: number) {
+    const updateFont = (newIndex: number) => {
         setFontIndex(newIndex);
         localStorage.setItem('font_index', String(newIndex));
-    }
+        const font_classes = FONT_OPTIONS.map((f) => f.class);
+        document.body.classList.remove(...font_classes);
+        document.body.classList.add(font_classes[newIndex]);
+    };
 
-    function updateTheme(newIndex: number) {
+    const updateTheme = (newIndex: number) => {
         setThemeIndex(newIndex);
         localStorage.setItem('theme_index', String(newIndex));
-    }
+        const theme_classes = THEME_OPTIONS.map((t) => t.class);
+        document.body.classList.remove(...theme_classes);
+        document.body.classList.add(theme_classes[newIndex]);
+    };
 
-    function updateLineHeight(newSize: number) {
+    const updateLineHeight = (newSize: number) => {
         setLineHeight(newSize);
         localStorage.setItem('line_height', String(newSize));
-    }
+    };
 
-    function updateFontSize(newSize: number) {
+    const updateFontSize = (newSize: number) => {
         setFontSize(newSize);
         localStorage.setItem('font_size', String(newSize));
-    }
+    };
 
     return (
         <BrowserRouter>
@@ -72,9 +82,9 @@ export default function App() {
 
             <div
                 style={{
-                    fontFamily: FONT_OPTIONS[fontIndex].value,
-                    background: THEME_OPTIONS[themeIndex].background,
-                    color: THEME_OPTIONS[themeIndex].color,
+                    // fontFamily: FONT_OPTIONS[fontIndex].value,
+                    // background: THEME_OPTIONS[themeIndex].background,
+                    // color: THEME_OPTIONS[themeIndex].color,
                     width: '100vw',
                     fontSize: `${fontSize}%`,
                     lineHeight: `${lineHeight}em`,
