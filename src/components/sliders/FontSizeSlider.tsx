@@ -31,7 +31,7 @@ export default function FontSizeSlider({
 					step={10}
 					value={value}
 					onValueChange={handleValueChange}
-					className="flex-grow"
+					className="grow"
 				/>
 				<p style={{ fontSize: "3em", width: "36px", textAlign: "right" }}>A</p>
 			</div>
