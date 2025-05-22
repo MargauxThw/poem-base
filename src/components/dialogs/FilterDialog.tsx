@@ -235,6 +235,7 @@ export function FilterDialog({ initiateFetch, urlSuffix }: FilterDialogProps) {
                                         value={linesStart}
                                         onChange={(e) => {
                                             setLinesStart(e.target.value);
+                                            setLinesEnd(e.target.value);
                                         }}
                                     />
                                     <Button variant="secondary" onClick={resetLines}>

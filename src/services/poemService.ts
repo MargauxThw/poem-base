@@ -1,13 +1,5 @@
 import { validLineCounts } from '@/utils/staticData';
-import type { Poem, PoemFilter } from '../utils/types';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function intersectSets(setA: Set<number>, setB: Set<number>): number[] {
-    // Use the smaller set for iteration to optimize performance
-    if (setB.size < setA.size) [setA, setB] = [setB, setA];
-
-    return [...setA].filter((item) => setB.has(item));
-}
+import type { LikedPoem, Poem, PoemFilter } from '../utils/types';
 
 const getPoemFromCache = (slug: string): Poem | null => {
     const poem = localStorage.getItem(slug);
@@ -19,7 +11,7 @@ const getPoemFromCache = (slug: string): Poem | null => {
     return null;
 };
 
-export function getLocalStorageFilters(urlSuffix?: string): PoemFilter {
+export const getLocalStorageFilters = (urlSuffix?: string): PoemFilter => {
     const filters: PoemFilter = {};
 
     const linesStart = localStorage.getItem('linesStart' + (urlSuffix ?? ''));
@@ -54,7 +46,46 @@ export function getLocalStorageFilters(urlSuffix?: string): PoemFilter {
     }
 
     return filters;
-}
+};
+
+export const filterPoemList = (poemList: LikedPoem[], urlSuffix: string) => {
+    let tempPoemList = poemList;
+    const filters = getLocalStorageFilters(urlSuffix);
+
+    if (filters.authorText !== undefined) {
+        if (filters.authorAbs && filters.authorText) {
+            tempPoemList = tempPoemList.filter(
+                (poem) => poem.author.toLowerCase() === filters.authorText?.toLowerCase()
+            );
+        } else if (filters.authorText) {
+            tempPoemList = tempPoemList.filter((poem) =>
+                poem.author.toLowerCase().includes((filters.authorText || '').toLowerCase())
+            );
+        }
+    }
+
+    if (filters.titleText !== undefined) {
+        if (filters.titleAbs && filters.titleText) {
+            tempPoemList = tempPoemList.filter(
+                (poem) => poem.title.toLowerCase() === filters.titleText?.toLowerCase()
+            );
+        } else if (filters.titleText) {
+            tempPoemList = tempPoemList.filter((poem) =>
+                poem.title.toLowerCase().includes((filters.titleText || '').toLowerCase())
+            );
+        }
+    }
+
+    if (filters.linesStart !== undefined) {
+        tempPoemList = tempPoemList.filter((poem) => poem.linecount >= (filters.linesStart || 0));
+    }
+
+    if (filters.linesEnd !== undefined) {
+        tempPoemList = tempPoemList.filter((poem) => poem.linecount <= (filters.linesEnd || 0));
+    }
+
+    return tempPoemList;
+};
 
 export const getPoemBySlug = async (slug: string): Promise<Poem | null> => {
     const poem = getPoemFromCache(slug);

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 import { SORTING_OPTIONS_LIKES } from '@/utils/staticData';
 import { useNavigate } from 'react-router-dom';
-import { getLocalStorageFilters } from '@/services/poemService';
+import { filterPoemList } from '@/services/poemService';
 import PoemCard from '@/components/PoemCard';
 import PoemListPagination from '@/components/buttons/PoemListPagination';
 
@@ -22,74 +22,29 @@ export default function MyPoems() {
     const [likedPoemsFromDB, setLikedPoemsFromDB] = useState<LikedPoem[]>([]);
     const [likedPoems, setLikedPoems] = useState<LikedPoem[]>([]);
     const [sortMode, setSortMode] = useState<string>(SORTING_OPTIONS_LIKES.authorAZ);
-    // const [hasError, setHasError] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    // TODO: Move this to be used in browse and author pages
     const filterLikedPoems = async (initialLikedPoems?: LikedPoem[]) => {
-        let tempLikedPoems = initialLikedPoems || likedPoemsFromDB;
-        const filters = getLocalStorageFilters('_my-poems');
-
-        if (filters.authorText !== undefined) {
-            if (filters.authorAbs && filters.authorText) {
-                tempLikedPoems = tempLikedPoems.filter(
-                    (poem) => poem.author.toLowerCase() === filters.authorText?.toLowerCase()
-                );
-            } else if (filters.authorText) {
-                tempLikedPoems = tempLikedPoems.filter((poem) =>
-                    poem.author.toLowerCase().includes((filters.authorText || '').toLowerCase())
-                );
-            }
-        }
-
-        if (filters.titleText !== undefined) {
-            if (filters.titleAbs && filters.titleText) {
-                tempLikedPoems = tempLikedPoems.filter(
-                    (poem) => poem.title.toLowerCase() === filters.titleText?.toLowerCase()
-                );
-            } else if (filters.titleText) {
-                tempLikedPoems = tempLikedPoems.filter((poem) =>
-                    poem.title.toLowerCase().includes((filters.titleText || '').toLowerCase())
-                );
-            }
-        }
-
-        if (filters.linesStart !== undefined) {
-            tempLikedPoems = tempLikedPoems.filter(
-                (poem) => poem.linecount >= (filters.linesStart || 0)
-            );
-        }
-
-        if (filters.linesEnd !== undefined) {
-            tempLikedPoems = tempLikedPoems.filter(
-                (poem) => poem.linecount <= (filters.linesEnd || 0)
-            );
-        }
-
-        setLikedPoems(tempLikedPoems);
+        setLikedPoems(filterPoemList(initialLikedPoems ?? likedPoemsFromDB, '_my-poems'));
     };
 
     useEffect(() => {
         setIsLoading(true);
-        // setHasError(false);
         const fetchLikedPoems = async () => {
             try {
                 const response = await getAllLikedPoems();
                 setLikedPoemsFromDB(response);
                 filterLikedPoems(response);
-                console.log('Fetched liked poems:', response);
                 localStorage.setItem('likedPoems', JSON.stringify(response));
+
                 if (response.length === 0) {
-                    // setHasError(true);
                     setErrorMessage("It doesn't look like you have liked any poems.");
                 } else if (likedPoems.length === 0) {
-                    // setHasError(true);
                     setErrorMessage('None of your liked poems match the current filters.');
                 }
             } catch (error) {
                 console.error('Error fetching liked poems:', error);
-                // setHasError(true);
                 setErrorMessage(
                     'There was an error fetching your liked poems. Please try again later.'
                 );
@@ -138,21 +93,6 @@ export default function MyPoems() {
         }
     }, [likedPoems, sortMode]);
 
-    // useEffect(() => {
-    //     console.log('running error check');
-    //     localStorage.setItem('likedPoems', JSON.stringify(sortedPoems));
-    //     if (likedPoemsFromDB.length === 0) {
-    //         setHasError(true);
-    //         setErrorMessage("It doesn't look like you have liked any poems.");
-    //     } else if (sortedPoems.length === 0) {
-    //         setHasError(true);
-    //         setErrorMessage('None of your liked poems match the current filters.');
-    //     } else {
-    //         setHasError(false);
-    //         setErrorMessage('');
-    //     }
-    // }, [sortedPoems]);
-
     const totalPages = useMemo(() => {
         return Math.ceil(sortedPoems.length / 10);
     }, [sortedPoems]);
@@ -173,28 +113,35 @@ export default function MyPoems() {
                 <div className="flex flex-col items-start sm:items-start gap-4 w-full">
                     <div className="flex flex-row w-full justify-between align-middle flex-wrap mb-0 gap-2">
                         <h2 className="font-bold text-xl flex-grow p-0 mt-1">My Poems</h2>
-                        <Select
-                            value={sortMode}
-                            onValueChange={(value) =>
-                                setSortMode(
-                                    Object.values(SORTING_OPTIONS_LIKES).find((v) => v === value) ||
-                                        sortMode
-                                )
-                            }
-                        >
-                            <SelectTrigger>
-                                <span className="text-muted-foreground">Sort:</span>
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {Object.values(SORTING_OPTIONS_LIKES).map((option, index) => (
-                                    <SelectItem key={index} value={option}>
-                                        {option}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <FilterDialog initiateFetch={filterLikedPoems} urlSuffix={'_my-poems'} />
+                        <Separator className="flex sm:hidden sm:w-full my-2" />
+                        <div className="flex flex-row gap-2">
+                            <Select
+                                value={sortMode}
+                                onValueChange={(value) =>
+                                    setSortMode(
+                                        Object.values(SORTING_OPTIONS_LIKES).find(
+                                            (v) => v === value
+                                        ) || sortMode
+                                    )
+                                }
+                            >
+                                <SelectTrigger>
+                                    <span className="text-muted-foreground">Sort:</span>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {Object.values(SORTING_OPTIONS_LIKES).map((option, index) => (
+                                        <SelectItem key={index} value={option}>
+                                            {option}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FilterDialog
+                                initiateFetch={filterLikedPoems}
+                                urlSuffix={'_my-poems'}
+                            />
+                        </div>
                     </div>
 
                     <Separator />
@@ -207,11 +154,11 @@ export default function MyPoems() {
                     {sortedPoems && sortedPoems.length > 0 && (
                         <div className={`flex flex-col gap-4 w-full animate-blur-in`}>
                             <p className="border-0 text-muted-foreground text-end px-0 py-0 text-xs">
-                                {`Poems ${currentPage === 1 ? 1 : currentPage * 10 - 10 + 1}－${
+                                {`Poems ${currentPage === 1 ? 1 : currentPage * 10 - 10 + 1} to ${
                                     currentPage * 10 >= sortedPoems.length
                                         ? sortedPoems.length
                                         : currentPage * 10
-                                } | ${sortedPoems.length} result${sortedPoems.length === 1 ? '' : 's'}`}
+                                } (of ${sortedPoems.length} result${sortedPoems.length === 1 ? '' : 's'})`}
                             </p>
 
                             {sortedPoems
@@ -238,7 +185,7 @@ export default function MyPoems() {
 
                     {totalPages !== 1 && sortedPoems.length > 0 && (
                         <>
-                            <Separator className="animate-blur-in" />
+                            <Separator />
                             <PoemListPagination
                                 currentPage={currentPage}
                                 totalPages={totalPages}

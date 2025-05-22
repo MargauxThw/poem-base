@@ -20,11 +20,10 @@ export default function PoemCard({
     return (
         <Card className="w-full hover:shadow-lg cursor-pointer" onClick={openPoem}>
             <CardHeader className="pb-2">
-                <CardTitle>{poem.title}</CardTitle>
+                <CardTitle className="text-md">{poem.title}</CardTitle>
                 <CardDescription className="pb-1">
                     <div className="flex flex-row items-center gap-2">
                         {poem.author}
-
                         <Badge
                             variant={'outline'}
                             className="text-muted-foreground px-1"
