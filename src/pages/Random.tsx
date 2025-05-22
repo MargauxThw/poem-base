@@ -6,6 +6,7 @@ import LikeButton from '../components/buttons/LikeButton.tsx';
 import { Separator } from '@/components/ui/separator.tsx';
 import { samplePoem } from '@/utils/staticData.ts';
 import { fetchNewRandomFilteredPoems, getLocalStorageFilters } from '@/services/poemService.ts';
+import { FilterButton } from '@/components/buttons/FilterButton.tsx';
 
 export default function Random() {
     const [poem, setPoem] = useState<Poem | null>(null);
@@ -15,7 +16,6 @@ export default function Random() {
     const [errorMessage, setErrorMessage] = useState<string>('');
 
     const updatePoem = async () => {
-        console.log('Updating poem...');
         setIsLoading(true);
         let newPoem = poem;
         let tryCount = 0;
@@ -28,7 +28,7 @@ export default function Random() {
                 break;
             }
 
-            const poemList = await fetchNewRandomFilteredPoems(getLocalStorageFilters());
+            const poemList = await fetchNewRandomFilteredPoems(getLocalStorageFilters('_random'));
 
             if (typeof poemList === 'string') {
                 setHasError(true);
@@ -68,6 +68,7 @@ export default function Random() {
                     <Separator />
                     <RandomPoemButton setNewPoem={updatePoem} />
                     {poem && <LikeButton poem={poem} />}
+                    <FilterButton initiateFetch={updatePoem} urlSuffix={'_random'} />
                 </main>
             )}
         </div>

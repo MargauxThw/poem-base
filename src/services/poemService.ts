@@ -130,6 +130,7 @@ export const fetchNewRandomFilteredPoems = async (
     forSearchDefault?: boolean
 ): Promise<Array<Poem> | string> => {
     const baseUrl = 'https://poetrydb.org';
+    console.log('Fetching new random poems with filters:', poemFilter);
 
     let inputFields = '';
     let searchTerms = '';
