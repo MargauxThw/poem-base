@@ -98,32 +98,32 @@ export const getPoemBySlug = async (slug: string): Promise<Poem | null> => {
     }
 };
 
-export const getRandomPoem = async (poem: Poem | null): Promise<Poem | null> => {
-    // TODO: Add passing filters and make it not just 10 line poems
-    try {
-        const response = await fetch('https://poetrydb.org/linecount/10');
-        const data = await response.json();
-        if (data && data.length > 0) {
-            let randomPoem = data[(Math.random() * data.length) | 0];
-            while (poem != null && randomPoem.title === poem.title && data.length > 1) {
-                randomPoem = data[(Math.random() * data.length) | 0];
-            }
+// export const getRandomPoem = async (poem: Poem | null): Promise<Poem | null> => {
+//     // TODO: Add passing filters and make it not just 10 line poems
+//     try {
+//         const response = await fetch('https://poetrydb.org/linecount/10');
+//         const data = await response.json();
+//         if (data && data.length > 0) {
+//             let randomPoem = data[(Math.random() * data.length) | 0];
+//             while (poem != null && randomPoem.title === poem.title && data.length > 1) {
+//                 randomPoem = data[(Math.random() * data.length) | 0];
+//             }
 
-            const fetchedPoem: Poem = {
-                title: randomPoem.title,
-                author: randomPoem.author,
-                linecount: randomPoem.lines.filter((line: string) => line.trim() !== '').length,
-                lines: randomPoem.lines,
-            };
+//             const fetchedPoem: Poem = {
+//                 title: randomPoem.title,
+//                 author: randomPoem.author,
+//                 linecount: randomPoem.lines.filter((line: string) => line.trim() !== '').length,
+//                 lines: randomPoem.lines,
+//             };
 
-            return fetchedPoem;
-        }
-    } catch (error) {
-        console.error('Error fetching random poem:', error);
-        return null;
-    }
-    return null;
-};
+//             return fetchedPoem;
+//         }
+//     } catch (error) {
+//         console.error('Error fetching random poem:', error);
+//         return null;
+//     }
+//     return null;
+// };
 
 export const fetchNewRandomFilteredPoems = async (
     poemFilter: PoemFilter,
@@ -190,8 +190,6 @@ export const fetchNewRandomFilteredPoems = async (
         const response = await fetch(baseUrl + responseTail);
         const poems = await response.json();
 
-        // console.log(poems, poems.length);
-
         if (poems && poems.length > 0) {
             console.log('Poems found:', poems);
             return poems;
@@ -203,48 +201,3 @@ export const fetchNewRandomFilteredPoems = async (
         return 'An error has occured, try again later';
     }
 };
-
-// export async function getInvalidLineCounts() {
-//     console.log("Checking for invalid line counts...")
-//     const invalidLineCounts: number[] = []
-//     for (let i = 1000; i < 0; i++) {
-//         console.log(i)
-//         const response = await fetch(`https://poetrydb.org/linecount/${i}`)
-//         if (response.ok) {
-//             const data = await response.json()
-//             if (data && data.length === 0 || data.length === undefined) {
-//                 invalidLineCounts.push(i)
-//                 console.log("Invalid line count found:", i)
-//             } else if (!data) {
-//                 console.log("DATA ERROR: ", data, i)
-//             } else {
-//                 console.log(data.length, "poems found for line count", i, data)
-//             }
-//         } else {
-//             console.log("Response not OK for line count", i, response.statusText)
-//         }
-//     }
-//     console.log("Invalid line counts:", invalidLineCounts)
-
-//     return invalidLineCounts
-// }
-
-// export async function getValidLineCounts() {
-//     console.log("Checking for valid line counts...")
-//     const validLineCounts: number[] = []
-//     for (let i = 2000; i < 10000; i++) {
-//         console.log(i)
-//         const response = await fetch(`https://poetrydb.org/linecount/${i}`)
-//         if (response.ok) {
-//             const data = await response.json()
-//             if (data && data.length > 0) {
-//                 validLineCounts.push(i)
-//                 console.log("Valid line count found:", i)
-//             }
-//         } else {
-//             console.log("Response not OK for line count", i, response.statusText)
-//         }
-//     }
-//     console.log("Valid line counts:", validLineCounts)
-//     return validLineCounts
-// }
