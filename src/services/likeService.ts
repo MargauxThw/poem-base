@@ -23,6 +23,21 @@ export function getSlugFromPoem(poem: BasePoem): string {
     return `${poem.title}::${poem.author}::${poem.linecount}`;
 }
 
+export function getDateValue(
+    createdAt: string | { seconds: number; nanoseconds: number } | undefined
+): number {
+    if (!createdAt) return 0;
+    if (typeof createdAt === 'string') {
+        // ISO string
+        return Date.parse(createdAt);
+    }
+    if (typeof createdAt === 'object' && 'seconds' in createdAt) {
+        // Firestore Timestamp
+        return createdAt.seconds * 1000 + Math.floor(createdAt.nanoseconds / 1e6);
+    }
+    return 0;
+}
+
 export async function likePoem(poem: Poem) {
     const uid = auth.currentUser?.uid;
     if (!uid) {
