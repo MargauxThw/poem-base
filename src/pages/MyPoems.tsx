@@ -70,6 +70,10 @@ export default function MyPoems() {
         }
     }, [likedPoems, sortMode]);
 
+    useEffect(() => {
+        localStorage.setItem('likedPoems', JSON.stringify(sortedPoems));
+    }, [sortMode, sortedPoems]);
+
     return (
         <>
             <div className="flex flex-col items-start sm:items-start gap-4">
