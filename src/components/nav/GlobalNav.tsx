@@ -10,11 +10,11 @@ import {
     SheetTrigger,
 } from '@/components/ui/sheet';
 import { Button } from '../ui/button';
-import LineHeightSlider from '../sliders/LineHeightSlider';
+// import LineHeightSlider from '../sliders/LineHeightSlider';
 import { FONT_OPTIONS, THEME_OPTIONS } from '@/utils/staticData';
 import FontButton from '../buttons/FontButton';
 import ThemeButton from '../buttons/ThemeButton';
-import FontSizeSlider from '../sliders/FontSizeSlider';
+// import FontSizeSlider from '../sliders/FontSizeSlider';
 import MobileNav from './MobileNav';
 import { useAuthUser } from '@/hooks/useAuthUser';
 
@@ -23,10 +23,10 @@ type GlobalNavProps = {
     fontIndex: number;
     updateTheme: (newIndex: number) => void;
     themeIndex: number;
-    updateFontSize: (newSize: number) => void;
-    fontSize: number;
-    updateLineHeight: (newSize: number) => void;
-    lineHeight: number;
+    // updateFontSize: (newSize: number) => void;
+    // fontSize: number;
+    // updateLineHeight: (newSize: number) => void;
+    // lineHeight: number;
 };
 
 export default function GlobalNav({
