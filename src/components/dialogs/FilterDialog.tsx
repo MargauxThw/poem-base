@@ -16,12 +16,12 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 
-type FilterButtonProps = {
+type FilterDialogProps = {
     initiateFetch: () => void;
     urlSuffix: string;
 };
 
-export function FilterButton({ initiateFetch, urlSuffix }: FilterButtonProps) {
+export function FilterDialog({ initiateFetch, urlSuffix }: FilterDialogProps) {
     const [titleText, setTitleText] = useState<string>('');
     const [titleAbs, setTitleAbs] = useState<boolean>(false);
     const [authorText, setAuthorText] = useState<string>('');
@@ -111,7 +111,9 @@ export function FilterButton({ initiateFetch, urlSuffix }: FilterButtonProps) {
                 <Separator />
                 <div className="flex flex-col gap-4 items-start">
                     <div className="flex-col gap-2 w-full">
-                        <Label htmlFor="title">Title</Label>
+                        <Label htmlFor="title" className="mb-2">
+                            Title
+                        </Label>
                         <div className="flex flex-row items-center gap-2">
                             <Input
                                 id="title"
@@ -145,7 +147,9 @@ export function FilterButton({ initiateFetch, urlSuffix }: FilterButtonProps) {
                 <Separator />
                 <div className="flex flex-col gap-4 items-start">
                     <div className="flex-col gap-2 w-full">
-                        <Label htmlFor="author">Author</Label>
+                        <Label htmlFor="author" className="mb-2">
+                            Author
+                        </Label>
                         <div className="flex flex-row items-center gap-2">
                             <Input
                                 id="author"
@@ -178,10 +182,12 @@ export function FilterButton({ initiateFetch, urlSuffix }: FilterButtonProps) {
                 </div>
                 <Separator />
                 <div className="flex flex-col gap-4 items-start">
-                    {urlSuffix === '_random' ? (
+                    {urlSuffix === '_random' || urlSuffix === '_my-poems' ? (
                         <div className="flex flex-row items-end gap-2">
                             <div className="flex-col gap-2 w-full">
-                                <Label htmlFor="lines-start">Minimum # of lines:</Label>
+                                <Label htmlFor="lines-start" className="mb-2">
+                                    Min # of lines:
+                                </Label>
                                 <Input
                                     type="number"
                                     id="lines-start"
@@ -195,7 +201,9 @@ export function FilterButton({ initiateFetch, urlSuffix }: FilterButtonProps) {
                             </div>
 
                             <div className="flex-col gap-2 w-full">
-                                <Label htmlFor="lines-end">Maximum # of lines:</Label>
+                                <Label htmlFor="lines-end" className="mb-2">
+                                    Max # of lines:
+                                </Label>
 
                                 <Input
                                     type="number"
@@ -213,7 +221,28 @@ export function FilterButton({ initiateFetch, urlSuffix }: FilterButtonProps) {
                             </Button>
                         </div>
                     ) : (
-                        <></>
+                        <div className="flex flex-row items-end gap-2 w-full">
+                            <div className="flex-col gap-2 w-full">
+                                <Label htmlFor="lines-start" className="mb-2">
+                                    Number of lines:
+                                </Label>
+                                <div className="flex flex-row items-center gap-2">
+                                    <Input
+                                        type="number"
+                                        id="lines-start"
+                                        placeholder="Any"
+                                        onPaste={handlePaste}
+                                        value={linesStart}
+                                        onChange={(e) => {
+                                            setLinesStart(e.target.value);
+                                        }}
+                                    />
+                                    <Button variant="secondary" onClick={resetLines}>
+                                        Reset
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
                     )}
                 </div>
                 <Separator />

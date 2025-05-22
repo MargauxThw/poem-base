@@ -6,7 +6,7 @@ import LikeButton from '../components/buttons/LikeButton.tsx';
 import { Separator } from '@/components/ui/separator.tsx';
 import { samplePoem } from '@/utils/staticData.ts';
 import { fetchNewRandomFilteredPoems, getLocalStorageFilters } from '@/services/poemService.ts';
-import { FilterButton } from '@/components/buttons/FilterButton.tsx';
+import { FilterDialog } from '@/components/dialogs/FilterDialog.tsx';
 
 export default function Random() {
     const [poem, setPoem] = useState<Poem | null>(null);
@@ -58,14 +58,14 @@ export default function Random() {
                 >
                     {hasError ? (
                         <>
-                            <p>{errorMessage}</p>
+                            <p className="animate-blur-wiggle-in">{errorMessage}</p>
                             <Separator />
                         </>
                     ) : (
                         <PoemLayout poem={poem} />
                     )}
                     <div className="flex flex-row gap-2">
-                        <FilterButton initiateFetch={updatePoem} urlSuffix={'_random'} />
+                        <FilterDialog initiateFetch={updatePoem} urlSuffix={'_random'} />
                         <RandomPoemButton setNewPoem={updatePoem} />
                         {poem && <LikeButton poem={poem} />}
                     </div>
