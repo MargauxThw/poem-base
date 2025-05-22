@@ -17,30 +17,22 @@ export default function Random() {
 
     const updatePoem = async () => {
         setIsLoading(true);
-        let newPoem = poem;
-        let tryCount = 0;
 
-        while (
-            newPoem == null ||
-            (newPoem.title === poem?.title && newPoem.author === poem?.author)
-        ) {
-            if (tryCount > 2) {
-                break;
-            }
+        const poemList = await fetchNewRandomFilteredPoems(getLocalStorageFilters('_random'));
 
-            const poemList = await fetchNewRandomFilteredPoems(getLocalStorageFilters('_random'));
-
-            if (typeof poemList === 'string') {
-                setHasError(true);
-                setErrorMessage(poemList);
-                setIsLoading(false);
-                setIsNew(true);
-                return;
-            }
-
-            newPoem = poemList[0];
-            tryCount += 1;
+        if (typeof poemList === 'string') {
+            setHasError(true);
+            setErrorMessage(poemList);
+            setIsLoading(false);
+            setIsNew(true);
+            return;
         }
+
+        let randomIndex = Math.floor(Math.random() * poemList.length);
+        if (poem !== null && randomIndex == poemList.indexOf(poem) && poemList.length > 1) {
+            randomIndex = randomIndex == poemList.length - 1 ? randomIndex - 1 : randomIndex + 1;
+        }
+        const newPoem = poemList[randomIndex];
 
         setPoem(newPoem);
         setHasError(false);
@@ -64,11 +56,19 @@ export default function Random() {
                         isNew ? 'animate-blur-in' : ''
                     } ${isLoading ? 'animate-blur-in-out' : ''}`}
                 >
-                    {hasError ? <p>{errorMessage}</p> : <PoemLayout poem={poem} />}
-                    <Separator />
-                    <RandomPoemButton setNewPoem={updatePoem} />
-                    {poem && <LikeButton poem={poem} />}
-                    <FilterButton initiateFetch={updatePoem} urlSuffix={'_random'} />
+                    {hasError ? (
+                        <>
+                            <p>{errorMessage}</p>
+                            <Separator />
+                        </>
+                    ) : (
+                        <PoemLayout poem={poem} />
+                    )}
+                    <div className="flex flex-row gap-2">
+                        <FilterButton initiateFetch={updatePoem} urlSuffix={'_random'} />
+                        <RandomPoemButton setNewPoem={updatePoem} />
+                        {poem && <LikeButton poem={poem} />}
+                    </div>
                 </main>
             )}
         </div>

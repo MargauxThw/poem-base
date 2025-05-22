@@ -19,6 +19,10 @@ export function getLikeIdFromSlug(slug: string): string {
     return encodeURIComponent(slug);
 }
 
+export function getSlugFromPoem(poem: BasePoem): string {
+    return `${poem.title}::${poem.author}::${poem.linecount}`;
+}
+
 export async function likePoem(poem: Poem) {
     const uid = auth.currentUser?.uid;
     if (!uid) {
@@ -53,6 +57,8 @@ export async function likePoem(poem: Poem) {
             });
         }
     });
+
+    localStorage.setItem(getSlugFromPoem(poem), JSON.stringify(poem));
 
     return true;
 }
