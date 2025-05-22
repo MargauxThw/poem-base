@@ -24,7 +24,7 @@ export default function Random() {
             newPoem == null ||
             (newPoem.title === poem?.title && newPoem.author === poem?.author)
         ) {
-            if (tryCount > 3) {
+            if (tryCount > 2) {
                 break;
             }
 
