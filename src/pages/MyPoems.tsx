@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { LikedPoem } from '../utils/types';
 import { getAllLikedPoems, getDateValue, getLikeId } from '../services/likeService';
-import Markdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
 import { Separator } from '@/components/ui/separator';
 import { FilterDialog } from '@/components/dialogs/FilterDialog';
 import {
@@ -13,16 +11,22 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { SORTING_OPTIONS_LIKES } from '@/utils/staticData';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getLocalStorageFilters } from '@/services/poemService';
+import PoemCard from '@/components/PoemCard';
+import PoemListPagination from '@/components/buttons/PoemListPagination';
 
 export default function MyPoems() {
+    const navigate = useNavigate();
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const [likedPoemsFromDB, setLikedPoemsFromDB] = useState<LikedPoem[]>([]);
     const [likedPoems, setLikedPoems] = useState<LikedPoem[]>([]);
     const [sortMode, setSortMode] = useState<string>(SORTING_OPTIONS_LIKES.authorAZ);
-    const [hasError, setHasError] = useState<boolean>(false);
+    // const [hasError, setHasError] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
+    // TODO: Move this to be used in browse and author pages
     const filterLikedPoems = async (initialLikedPoems?: LikedPoem[]) => {
         let tempLikedPoems = initialLikedPoems || likedPoemsFromDB;
         const filters = getLocalStorageFilters('_my-poems');
@@ -67,28 +71,33 @@ export default function MyPoems() {
     };
 
     useEffect(() => {
+        setIsLoading(true);
+        // setHasError(false);
         const fetchLikedPoems = async () => {
             try {
                 const response = await getAllLikedPoems();
                 setLikedPoemsFromDB(response);
                 filterLikedPoems(response);
+                console.log('Fetched liked poems:', response);
                 localStorage.setItem('likedPoems', JSON.stringify(response));
                 if (response.length === 0) {
-                    setHasError(true);
+                    // setHasError(true);
                     setErrorMessage("It doesn't look like you have liked any poems.");
                 } else if (likedPoems.length === 0) {
-                    setHasError(true);
+                    // setHasError(true);
                     setErrorMessage('None of your liked poems match the current filters.');
                 }
             } catch (error) {
                 console.error('Error fetching liked poems:', error);
-                setHasError(true);
+                // setHasError(true);
                 setErrorMessage(
                     'There was an error fetching your liked poems. Please try again later.'
                 );
             }
         };
         fetchLikedPoems();
+        setIsLoading(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const sortedPoems = useMemo(() => {
@@ -129,78 +138,116 @@ export default function MyPoems() {
         }
     }, [likedPoems, sortMode]);
 
-    useEffect(() => {
-        localStorage.setItem('likedPoems', JSON.stringify(sortedPoems));
-        if (likedPoemsFromDB.length === 0) {
-            setHasError(true);
-            setErrorMessage("It doesn't look like you have liked any poems.");
-        } else if (sortedPoems.length === 0) {
-            setHasError(true);
-            setErrorMessage('None of your liked poems match the current filters.');
-        } else {
-            setHasError(false);
-            setErrorMessage('');
-        }
-    }, [sortMode, sortedPoems, likedPoemsFromDB]);
+    // useEffect(() => {
+    //     console.log('running error check');
+    //     localStorage.setItem('likedPoems', JSON.stringify(sortedPoems));
+    //     if (likedPoemsFromDB.length === 0) {
+    //         setHasError(true);
+    //         setErrorMessage("It doesn't look like you have liked any poems.");
+    //     } else if (sortedPoems.length === 0) {
+    //         setHasError(true);
+    //         setErrorMessage('None of your liked poems match the current filters.');
+    //     } else {
+    //         setHasError(false);
+    //         setErrorMessage('');
+    //     }
+    // }, [sortedPoems]);
+
+    const totalPages = useMemo(() => {
+        return Math.ceil(sortedPoems.length / 10);
+    }, [sortedPoems]);
+
+    const changePage = (newPageNumber: number) => {
+        setCurrentPage(newPageNumber);
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    };
+
+    if (isLoading) return null;
 
     return (
-        <>
-            <div className="flex flex-col items-start sm:items-start gap-4">
-                <h2 className="decoration-black font-bold text-xl">My Poems</h2>
-                <FilterDialog initiateFetch={filterLikedPoems} urlSuffix={'_my-poems'} />
-                <Select
-                    value={sortMode}
-                    onValueChange={(value) =>
-                        setSortMode(
-                            Object.values(SORTING_OPTIONS_LIKES).find((v) => v === value) ||
-                                sortMode
-                        )
-                    }
-                >
-                    <SelectTrigger>
-                        <span className="text-muted-foreground">Sort:</span>
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {Object.values(SORTING_OPTIONS_LIKES).map((option, index) => (
-                            <SelectItem key={index} value={option}>
-                                {option}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
+        <div className="mt-12 justify-items-center min-h-full p-4 pb-8 animate-blur-in">
+            <main className="w-full max-w-lg h-fit">
+                <div className="flex flex-col items-start sm:items-start gap-4 w-full">
+                    <div className="flex flex-row w-full justify-between align-middle flex-wrap mb-0 gap-2">
+                        <h2 className="font-bold text-xl flex-grow p-0 mt-1">My Poems</h2>
+                        <Select
+                            value={sortMode}
+                            onValueChange={(value) =>
+                                setSortMode(
+                                    Object.values(SORTING_OPTIONS_LIKES).find((v) => v === value) ||
+                                        sortMode
+                                )
+                            }
+                        >
+                            <SelectTrigger>
+                                <span className="text-muted-foreground">Sort:</span>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {Object.values(SORTING_OPTIONS_LIKES).map((option, index) => (
+                                    <SelectItem key={index} value={option}>
+                                        {option}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <FilterDialog initiateFetch={filterLikedPoems} urlSuffix={'_my-poems'} />
+                    </div>
 
-            <Separator />
-            {hasError ? (
-                <div className="justify-items-center min-h-full p-4 py-8 animate-blur-wiggle-in">
-                    <p>{errorMessage}</p>
-                </div>
-            ) : (
-                <>
-                    <ul>
-                        {sortedPoems.map((poem) => (
-                            <li key={getLikeId(poem)}>
-                                <Link to={`/my-poems/viewer/${getLikeId(poem)}`}>
-                                    <div>
-                                        <h2>{poem.title}</h2>
-                                        <h3>{poem.author}</h3>
-                                        <p>{`Lines: ${poem.linecount}`}</p>
-                                        <p>{`Created at: ${poem.createdAt}`}</p>
-                                        {poem.peekLines.map((line, index) => (
-                                            <Markdown rehypePlugins={[rehypeRaw]} key={index}>
-                                                {`${line.trimStart()}<br/>`}
-                                            </Markdown>
-                                        ))}
-                                    </div>
-                                </Link>
-                                <hr />
-                            </li>
-                        ))}
-                    </ul>
                     <Separator />
-                </>
-            )}
-        </>
+                    {sortedPoems.length === 0 && (
+                        <div className="justify-items-center min-h-full w-full p-4 py-8 animate-blur-wiggle-in">
+                            <p>{errorMessage}</p>
+                        </div>
+                    )}
+
+                    {sortedPoems && sortedPoems.length > 0 && (
+                        <div className={`flex flex-col gap-4 w-full animate-blur-in`}>
+                            <p className="border-0 text-muted-foreground text-end px-0 py-0 text-xs">
+                                {`Poems ${currentPage === 1 ? 1 : currentPage * 10 - 10 + 1}－${
+                                    currentPage * 10 >= sortedPoems.length
+                                        ? sortedPoems.length
+                                        : currentPage * 10
+                                } | ${sortedPoems.length} result${sortedPoems.length === 1 ? '' : 's'}`}
+                            </p>
+
+                            {sortedPoems
+                                .slice(
+                                    currentPage === 1 ? 0 : currentPage * 10 - 10,
+                                    currentPage * 10 >= sortedPoems.length
+                                        ? sortedPoems.length
+                                        : currentPage * 10
+                                )
+                                .map((poem, index) => {
+                                    return (
+                                        <PoemCard
+                                            key={index}
+                                            poem={poem}
+                                            heart={true}
+                                            openPoem={() =>
+                                                navigate(`/my-poems/viewer/${getLikeId(poem)}`)
+                                            }
+                                        />
+                                    );
+                                })}
+                        </div>
+                    )}
+
+                    {totalPages !== 1 && sortedPoems.length > 0 && (
+                        <>
+                            <Separator className="animate-blur-in" />
+                            <PoemListPagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                setCurrentPage={changePage}
+                            />
+                        </>
+                    )}
+                </div>
+            </main>
+        </div>
     );
 }

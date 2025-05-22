@@ -99,7 +99,8 @@ export default function MyPoemsViewer() {
     if (!poems.length) return <div>No liked poems.</div>;
 
     return (
-        <div className="grid grid-rows-[20px_1fr_20px] items-start justify-items-center min-h-full p-4 pb-8 gap-4 animate-blur-in">
+        // <div className="grid grid-rows-[20px_1fr_20px] items-start justify-items-center min-h-full p-4 pb-8 gap-4 animate-blur-in">
+        <div className="mt-12 justify-items-center min-h-full p-4 pb-8 animate-blur-in">
             <main
                 className={`flex flex-col gap-8 row-start-2 items-start sm:items-start w-full max-w-lg h-fit ${
                     isNew ? 'animate-blur-in' : ''

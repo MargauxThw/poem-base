@@ -60,13 +60,13 @@ export const samplePoem: Poem = {
 export const samplePoemList: Array<Poem> = Array(10).fill(samplePoem);
 
 export const SORTING_OPTIONS_POEMS = {
+    random: 'Random',
     authorAZ: 'By Author (A-Z)',
     authorZA: 'By Author (Z-A)',
     titleAZ: 'By Title (A-Z)',
     titleZA: 'By Title (Z-A)',
     linesAsc: 'By # Lines (Asc.)',
     linesDesc: 'By # Lines (Desc.)',
-    random: 'Random',
 };
 
 export const SORTING_OPTIONS_LIKES = {
