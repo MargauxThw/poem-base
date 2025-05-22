@@ -87,16 +87,32 @@ export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: 
                         size="icon"
                         onClick={handleClick}
                         disabled={isLoading}
+                        className="group"
                     >
                         <span className="sr-only">Like poem</span>
-                        <Heart fill={isLiked ? 'red' : 'var(--foreground)'} stroke="none" />
+                        <Heart
+                            fill={isLiked ? 'red' : 'var(--foreground)'}
+                            stroke="none"
+                            className={
+                                isLiked ? '' : 'group-hover:fill-[var(--color-accent-foreground)]'
+                            }
+                        />
                     </Button>
                 ) : (
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button variant="outline" size="icon" disabled={isLoading}>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                disabled={isLoading}
+                                className="group"
+                            >
                                 <span className="sr-only">Like poem</span>
-                                <Heart fill={'var(--foreground)'} stroke="none" />
+                                <Heart
+                                    fill={'var(--foreground)'}
+                                    stroke="none"
+                                    className="group-hover:fill-[var(--color-accent-foreground)]"
+                                />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="m-auto py-2 px-4 w-fit">
