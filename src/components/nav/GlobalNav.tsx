@@ -34,10 +34,10 @@ export default function GlobalNav({
     fontIndex,
     updateTheme,
     themeIndex,
-    updateFontSize,
-    fontSize,
-    updateLineHeight,
-    lineHeight,
+    // updateFontSize,
+    // fontSize,
+    // updateLineHeight,
+    // lineHeight,
 }: GlobalNavProps) {
     const { user, loading } = useAuthUser();
 
@@ -99,7 +99,7 @@ export default function GlobalNav({
                                             />
                                         ))}
                                     </div>
-                                    <div className="mb-4 w100%">
+                                    {/* <div className="mb-4 w100%">
                                         <FontSizeSlider
                                             currentFontSize={fontSize}
                                             updateFontSize={updateFontSize}
@@ -110,7 +110,7 @@ export default function GlobalNav({
                                             currentLineHeight={lineHeight}
                                             updateLineHeight={updateLineHeight}
                                         />
-                                    </div>
+                                    </div> */}
                                 </SheetContent>
                             </Sheet>
 
