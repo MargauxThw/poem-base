@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
-import { auth } from '../../utils/firebaseConfig';
 import { CircleUserRound, Palette } from 'lucide-react';
 import DesktopNav from './DesktopNav';
 import { Link } from 'react-router-dom';
-import type { User } from 'firebase/auth';
 import {
     Sheet,
     SheetContent,
@@ -19,6 +16,7 @@ import FontButton from '../buttons/FontButton';
 import ThemeButton from '../buttons/ThemeButton';
 import FontSizeSlider from '../sliders/FontSizeSlider';
 import MobileNav from './MobileNav';
+import { useAuthUser } from '@/hooks/useAuthUser';
 
 type GlobalNavProps = {
     updateFont: (newIndex: number) => void;
@@ -41,14 +39,9 @@ export default function GlobalNav({
     updateLineHeight,
     lineHeight,
 }: GlobalNavProps) {
-    const [user, setUser] = useState<User | null>(null);
+    const { user, loading } = useAuthUser();
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((u) => {
-            setUser(u);
-        });
-        return unsubscribe;
-    }, []);
+    if (loading) return null;
 
     return (
         <header className="border-grid sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 md:px-12 sm:px-4">

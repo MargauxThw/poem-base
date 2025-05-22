@@ -45,10 +45,10 @@ export default function Account() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto p-4 mt-16">
+        <div className="max-w-2xl mx-auto p-4 mt-16 bg-theme-green-50">
             <h1 className="text-2xl font-bold mb-6">Account Settings</h1>
 
-            <div className="bg-white shadow rounded-lg p-6 mb-6">
+            <div className="bg-theme-green-100 shadow rounded-lg p-6 mb-6">
                 <h2 className="text-xl font-semibold mb-4">Profile Information</h2>
                 <div className="space-y-4">
                     <div>

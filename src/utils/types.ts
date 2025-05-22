@@ -1,7 +1,7 @@
 export interface BasePoem {
     title: string;
     author: string;
-    numLines: number;
+    linecount: number;
 }
 
 export interface Poem extends BasePoem {

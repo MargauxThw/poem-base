@@ -83,7 +83,7 @@ export const getPoemBySlug = async (slug: string): Promise<Poem | null> => {
             const poem: Poem = {
                 title: poemData.title,
                 author: poemData.author,
-                numLines: poemData.linecount,
+                linecount: poemData.linecount,
                 lines: poemData.lines,
             };
             console.log('Poem added to cache', slug);
@@ -112,7 +112,7 @@ export const getRandomPoem = async (poem: Poem | null): Promise<Poem | null> => 
             const fetchedPoem: Poem = {
                 title: randomPoem.title,
                 author: randomPoem.author,
-                numLines: randomPoem.lines.filter((line: string) => line.trim() !== '').length,
+                linecount: randomPoem.lines.filter((line: string) => line.trim() !== '').length,
                 lines: randomPoem.lines,
             };
 

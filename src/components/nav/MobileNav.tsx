@@ -5,12 +5,11 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from '@/components/ui/drawer';
-import type { User } from 'firebase/auth';
 
-import { useCallback, useEffect, useState } from 'react';
-import { auth } from '@/utils/firebaseConfig';
+import { useCallback, useState } from 'react';
 import { Button } from '../ui/button';
 import MobileLink from '../links/MobileLinks';
+import { useAuthUser } from '@/hooks/useAuthUser';
 
 export default function MobileNav() {
     const [open, setOpen] = useState(false);
@@ -25,14 +24,9 @@ export default function MobileNav() {
         [setMetaColor, metaColor]
     );
 
-    const [user, setUser] = useState<User | null>(null);
+    const { user, loading } = useAuthUser();
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((u) => {
-            setUser(u);
-        });
-        return unsubscribe;
-    }, []);
+    if (loading) return null;
 
     return (
         <Drawer open={open} onOpenChange={onOpenChange}>

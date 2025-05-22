@@ -38,7 +38,7 @@ export const THEME_OPTIONS = [
 export const samplePoem: Poem = {
     title: 'Lorem Ipsum Dolor',
     author: 'Lorem Ipsum Dolor Sit Amet',
-    numLines: 12,
+    linecount: 12,
     lines: [
         'Lorem ipsum dolor sit amet,',
         'consectetur adipiscing elit.',

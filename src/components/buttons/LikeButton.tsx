@@ -3,16 +3,19 @@ import type { Poem } from '../../utils/types';
 import { likePoem, poemIsLiked, unlikePoem } from '../../services/likeService';
 import { Button } from '../ui/button';
 import { Heart } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { useAuthUser } from '@/hooks/useAuthUser';
 
 type LikeButtonProps = {
     poem: Poem;
     initiateLikeLoading?: () => void;
-    onLikeChange?: () => void; // Optional callback function to be called when the like state changes
+    onLikeChange?: () => void;
 };
 
 export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: LikeButtonProps) {
     const [isLiked, setIsLiked] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const { user, loading } = useAuthUser();
 
     useEffect(() => {
         setIsLiked(false); // Reset state when poem changes
@@ -27,9 +30,11 @@ export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: 
             }
         };
 
-        checkIsLiked();
+        if (user) {
+            checkIsLiked();
+        }
         setIsLoading(false); // Set loading to false after checking
-    }, [poem]);
+    }, [poem, user]);
 
     const handleClick = async () => {
         setIsLoading(true); // Set loading to true while processing the like/unlike
@@ -71,15 +76,46 @@ export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: 
         setIsLoading(false);
     };
 
+    if (loading) return null;
+
     return (
         <>
             {poem.title.length > 0 ? (
-                <Button variant="outline" size="icon" onClick={handleClick} disabled={isLoading}>
-                    <Heart fill={isLiked ? 'red' : 'var(--foreground)'} stroke="none" />
-                </Button>
-            ) : (
-                <></>
-            )}
+                user ? (
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={handleClick}
+                        disabled={isLoading}
+                    >
+                        <span className="sr-only">Like poem</span>
+                        <Heart fill={isLiked ? 'red' : 'var(--foreground)'} stroke="none" />
+                    </Button>
+                ) : (
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button variant="outline" size="icon" disabled={isLoading}>
+                                <span className="sr-only">Like poem</span>
+                                <Heart fill={'var(--foreground)'} stroke="none" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="m-auto py-2 px-4 w-fit">
+                            <p>
+                                <a
+                                    href="/login"
+                                    className="underline"
+                                    onClick={() =>
+                                        localStorage.setItem('to like', JSON.stringify(poem))
+                                    }
+                                >
+                                    Log in or sign up
+                                </a>{' '}
+                                to like poems
+                            </p>
+                        </PopoverContent>
+                    </Popover>
+                )
+            ) : null}
         </>
     );
 }

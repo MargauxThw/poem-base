@@ -1,20 +1,13 @@
-import { useEffect, useState } from 'react';
-import type { User } from 'firebase/auth';
-import { auth } from '../../utils/firebaseConfig';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useAuthUser } from '@/hooks/useAuthUser';
 
 export default function DesktopNav() {
-    const [user, setUser] = useState<User | null>(null);
+    const { user, loading } = useAuthUser();
     const location = useLocation();
     const pathname = location.pathname;
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((u) => {
-            setUser(u);
-        });
-        return unsubscribe;
-    }, []);
+    if (loading) return null;
 
     return (
         <div className="hidden md:flex">

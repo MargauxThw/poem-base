@@ -12,7 +12,7 @@ import {
 import type { BasePoem, LikedPoem, Poem } from '../utils/types';
 
 export function getLikeId(poem: BasePoem): string {
-    return encodeURIComponent(`${poem.title}::${poem.author}::${poem.numLines}`);
+    return encodeURIComponent(`${poem.title}::${poem.author}::${poem.linecount}`);
 }
 
 export function getLikeIdFromSlug(slug: string): string {
@@ -24,6 +24,8 @@ export async function likePoem(poem: Poem) {
     if (!uid) {
         throw new Error('User is not logged in');
     }
+
+    console.log('LIKING POEM', poem);
 
     const userRef = doc(db, 'users', uid);
     const likeId = getLikeId(poem);
@@ -38,7 +40,7 @@ export async function likePoem(poem: Poem) {
             transaction.set(likeRef, {
                 title: poem.title,
                 author: poem.author,
-                numLines: poem.numLines,
+                linecount: poem.linecount,
                 peekLines: poem.lines.slice(0, 4),
                 createdAt: serverTimestamp(),
             });
@@ -109,6 +111,8 @@ export async function poemIsLiked(poem: Poem): Promise<boolean> {
     if (!uid) {
         throw new Error('User is not logged in');
     }
+
+    console.log('CHECKING IS LIKED', poem);
 
     const likeId = getLikeId(poem);
     const likeRef = doc(db, 'users', uid, 'likes', likeId);

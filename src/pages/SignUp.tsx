@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../utils/firebaseConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import { ensureUserDoc } from '../services/userService';
+import { likePoem } from '@/services/likeService';
 
 export default function SignUp() {
     const [email, setEmail] = useState('');
@@ -15,8 +16,13 @@ export default function SignUp() {
         setError('');
         try {
             await createUserWithEmailAndPassword(auth, email, password);
-            navigate('/my-poems');
             await ensureUserDoc();
+            const toLike = JSON.parse(localStorage.getItem('to like') || 'null');
+            if (toLike) {
+                localStorage.removeItem('to like');
+                await likePoem(toLike);
+            }
+            navigate('/my-poems');
         } catch (err: unknown) {
             if (err instanceof Error) {
                 setError(err.message);
