@@ -21,7 +21,7 @@ export default function PoemLayout({ poem }: { poem: Poem | null }) {
         <>
             <div className="flex flex-col items-start sm:items-start gap-4">
                 <h2 className="decoration-black font-bold text-xl">{poemState.title}</h2>
-                <Link to={`/authors/${poemState.author}`}>
+                <Link to={`/authors/${poemState.author}`} className="hover:underline-offset-4">
                     <h3 className="italic text-lg hover:underline">{poemState.author}</h3>
                 </Link>
             </div>
@@ -34,6 +34,7 @@ export default function PoemLayout({ poem }: { poem: Poem | null }) {
                     </Markdown>
                 ))}
             </section>
+            <Separator />
         </>
     );
 }

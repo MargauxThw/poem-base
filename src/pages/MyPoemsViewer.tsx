@@ -6,6 +6,8 @@ import LikeButton from '../components/buttons/LikeButton';
 import { getPoemBySlug } from '@/services/poemService';
 import PoemLayout from '@/components/PoemLayout';
 import { Button } from '@/components/ui/button';
+import { MoveLeft, MoveRight } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 export default function MyPoemsViewer() {
     const { slug } = useParams<{ slug: string }>();
@@ -15,6 +17,8 @@ export default function MyPoemsViewer() {
     const [poem, setPoem] = useState<Poem | null>(null);
     const [isUnliked, setIsUnliked] = useState(false);
     const [likeLoading, setLikeLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isNew, setIsNew] = useState(false);
 
     const fetchPoems = useCallback(async () => {
         console.log('Running fetchPoems');
@@ -33,15 +37,19 @@ export default function MyPoemsViewer() {
         setPoems(likedPoems);
 
         const idx = likedPoems.findIndex((p) => {
+            console.log(slug);
             return getLikeId(p) === getLikeIdFromSlug(slug ?? '');
         });
         setCurrentIndex(idx >= 0 ? idx : 0);
 
         const poemData = await getPoemBySlug(slug ?? '');
         setPoem(poemData);
+        setIsLoading(false);
+        setIsNew(true);
     }, [slug]);
 
     useEffect(() => {
+        setIsLoading(true);
         setIsUnliked(false);
         setLikeLoading(false);
         fetchPoems();
@@ -61,6 +69,8 @@ export default function MyPoemsViewer() {
     };
 
     const navToNewPoem = (direction: 'next' | 'prev') => {
+        setIsNew(false);
+        setIsLoading(true);
         console.log('Running getNavPoemLikeId', direction);
         const localPoems = JSON.parse(localStorage.getItem('likedPoems') || '[]');
         if (!localPoems || localPoems.length === 0) {
@@ -82,44 +92,60 @@ export default function MyPoemsViewer() {
         }
         console.log('New index', isUnliked, currentIndex, new_index, localPoems, poems);
         navigate(`/my-poems/viewer/${getLikeId(localPoems[new_index])}`);
+        setIsLoading(false);
+        setIsNew(true);
     };
 
     if (!poems.length) return <div>No liked poems.</div>;
 
     return (
-        <div>
-            <button onClick={() => navigate('/my-poems')} style={{ marginBottom: 16 }}>
-                ← Back to My Poems
-            </button>
-            <div style={{ marginBottom: 8 }}>
-                {currentIndex + 1} of {poems.length}
-            </div>
-            <PoemLayout poem={poem} />
+        <div className="grid grid-rows-[20px_1fr_20px] items-start justify-items-center min-h-full p-4 pb-8 gap-4 animate-blur-in">
+            <main
+                className={`flex flex-col gap-8 row-start-2 items-start sm:items-start w-full max-w-lg h-fit ${
+                    isNew ? 'animate-blur-in' : ''
+                } ${isLoading ? 'animate-blur-in-out' : ''}`}
+            >
+                <div className="flex flex-row items-center justify-between w-full">
+                    <Button
+                        variant={'link'}
+                        style={{ padding: 0 }}
+                        onClick={() => navigate('/my-poems')}
+                    >
+                        <MoveLeft />
+                        Back to My Poems
+                    </Button>
+                    <Badge
+                        variant={'secondary'}
+                        className="px-1"
+                    >{`${currentIndex + 1} of ${poems.length}`}</Badge>
+                </div>
 
-            {poem && (
-                <LikeButton
-                    poem={poem}
-                    onLikeChange={handleLikeChange}
-                    initiateLikeLoading={() => setLikeLoading(true)}
-                />
-            )}
-            <div style={{ marginTop: 16 }}>
-                <Button
-                    variant={'outline'}
-                    onClick={() => navToNewPoem('prev')}
-                    disabled={likeLoading}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant={'outline'}
-                    onClick={() => navToNewPoem('next')}
-                    style={{ marginLeft: 8 }}
-                    disabled={likeLoading}
-                >
-                    Next
-                </Button>
-            </div>
+                <PoemLayout poem={poem} />
+
+                <div className="flex flex-row gap-2 mt-2">
+                    <Button
+                        variant={'outline'}
+                        onClick={() => navToNewPoem('prev')}
+                        disabled={likeLoading || isLoading}
+                    >
+                        <MoveLeft />
+                    </Button>
+                    <Button
+                        variant={'outline'}
+                        onClick={() => navToNewPoem('next')}
+                        disabled={likeLoading || isLoading}
+                    >
+                        <MoveRight />
+                    </Button>
+                    {poem && (
+                        <LikeButton
+                            poem={poem}
+                            onLikeChange={handleLikeChange}
+                            initiateLikeLoading={() => setLikeLoading(true)}
+                        />
+                    )}
+                </div>
+            </main>
         </div>
     );
 }
