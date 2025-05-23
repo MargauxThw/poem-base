@@ -29,6 +29,7 @@ export default function Browse() {
     const { user, loading } = useAuthUser();
 
     const fetchBrowsePoems = async () => {
+        setIsLoading(true);
         try {
             const filters = getLocalStorageFilters('_browse');
             setHasFilters(Object.keys(filters).length > 0);
@@ -50,6 +51,7 @@ export default function Browse() {
             console.error('Error fetching poems:', error);
             setErrorMessage('There was an error fetching poems. Please try again later.');
         }
+        setIsLoading(false);
     };
 
     const fetchLikedPoems = async () => {
@@ -116,8 +118,6 @@ export default function Browse() {
         });
     };
 
-    if (isLoading || loading) return null;
-
     return (
         <div className="mt-12 justify-items-center min-h-full p-4 pb-8 animate-blur-in">
             <main className="w-full max-w-lg h-fit">
@@ -160,7 +160,9 @@ export default function Browse() {
                     )}
 
                     {sortedPoems && sortedPoems.length > 0 && (
-                        <div className={`flex flex-col gap-4 w-full animate-blur-in`}>
+                        <div
+                            className={`flex flex-col gap-4 w-full animate-blur-in ${isLoading || loading ? 'animate-blur-in-out' : ''}`}
+                        >
                             <p className="border-0 text-muted-foreground text-end px-0 py-0 text-xs">
                                 {hasFilters
                                     ? `Poems ${currentPage === 1 ? 1 : currentPage * 10 - 10 + 1} to ${
@@ -199,7 +201,7 @@ export default function Browse() {
                         </div>
                     )}
 
-                    {totalPages !== 1 && sortedPoems.length > 0 && (
+                    {totalPages !== 1 && sortedPoems.length > 0 && !(isLoading || loading) && (
                         <>
                             <Separator />
                             <PoemListPagination
