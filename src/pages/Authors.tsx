@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import type { LikedPoem, Poem } from '../utils/types';
 import { getAllLikedPoems, getLikeId } from '../services/likeService';
 import { Separator } from '@/components/ui/separator';
-import { FilterDialog } from '@/components/dialogs/FilterDialog';
 import {
     Select,
     SelectContent,
@@ -10,42 +9,42 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { samplePoemList, SORTING_OPTIONS_LIKES, SORTING_OPTIONS_POEMS } from '@/utils/staticData';
-import { useNavigate } from 'react-router-dom';
-import { fetchNewRandomFilteredPoems, getLocalStorageFilters } from '@/services/poemService';
+import { samplePoemList, SORTING_OPTIONS_POEMS } from '@/utils/staticData';
+import { useNavigate, useParams } from 'react-router-dom';
 import PoemCard from '@/components/PoemCard';
 import PoemListPagination from '@/components/buttons/PoemListPagination';
 import { useAuthUser } from '@/hooks/useAuthUser';
+import { fetchPoemByAuthor } from '@/services/poemService';
 
-export default function Browse() {
+export default function Authors() {
     const navigate = useNavigate();
+    const { slug } = useParams<{ slug: string }>();
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [likedPoemsFromDB, setLikedPoemsFromDB] = useState<LikedPoem[]>([]);
     const [poems, setPoems] = useState<Poem[]>([]);
-    const [sortMode, setSortMode] = useState<string>(SORTING_OPTIONS_LIKES.authorAZ);
+    const [sortMode, setSortMode] = useState<string>(SORTING_OPTIONS_POEMS.titleAZ);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [hasFilters, setHasFilters] = useState<boolean>(false);
     const { user, loading } = useAuthUser();
 
-    const fetchBrowsePoems = async () => {
-        setIsLoading(true);
-        try {
-            const filters = getLocalStorageFilters('_browse');
-            setHasFilters(Object.keys(filters).length > 0);
+    const author = decodeURIComponent(slug ?? '');
 
-            const poemList = await fetchNewRandomFilteredPoems(filters, true);
+    const fetchAuthorsPoems = async () => {
+        setIsLoading(true);
+
+        try {
+            const poemList = await fetchPoemByAuthor(author);
             if (typeof poemList === 'string') {
                 setErrorMessage(poemList);
                 setPoems([]);
-                localStorage.setItem('browsePoems', JSON.stringify([]));
+                localStorage.setItem('authorsPoems', JSON.stringify([]));
             } else if (poemList.length === 0) {
-                setErrorMessage('No poems found matching the current filters.');
+                setErrorMessage('No poems found matching the current author.');
                 setPoems([]);
-                localStorage.setItem('browsePoems', JSON.stringify([]));
+                localStorage.setItem('authorsPoems', JSON.stringify([]));
             } else {
                 setPoems(poemList as Poem[]);
-                localStorage.setItem('browsePoems', JSON.stringify(poemList));
+                localStorage.setItem('authorsPoems', JSON.stringify(poemList));
             }
         } catch (error) {
             console.error('Error fetching poems:', error);
@@ -71,18 +70,12 @@ export default function Browse() {
         if (user) {
             fetchLikedPoems();
         }
-        fetchBrowsePoems();
+        fetchAuthorsPoems();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const sortedPoems = useMemo(() => {
         switch (sortMode) {
-            case SORTING_OPTIONS_POEMS.authorAZ:
-                return poems.sort((a, b) => a.author.localeCompare(b.author));
-
-            case SORTING_OPTIONS_POEMS.authorZA:
-                return poems.sort((a, b) => b.author.localeCompare(a.author));
-
             case SORTING_OPTIONS_POEMS.titleAZ:
                 return poems.sort((a, b) => a.title.localeCompare(b.title));
 
@@ -104,7 +97,7 @@ export default function Browse() {
     }, [poems, sortMode]);
 
     useEffect(() => {
-        localStorage.setItem('browsePoems', JSON.stringify(sortedPoems));
+        localStorage.setItem('authorsPoems', JSON.stringify(sortedPoems));
     }, [sortedPoems, sortMode]);
 
     const totalPages = useMemo(() => {
@@ -124,9 +117,9 @@ export default function Browse() {
             <main className="w-full max-w-lg h-fit">
                 <div className="flex flex-col items-start sm:items-start gap-4 w-full">
                     <div className="flex flex-row w-full justify-between align-middle flex-wrap mb-0 gap-2">
-                        <h2 className="font-bold text-xl flex-grow p-0 mt-1">Browse</h2>
+                        <h2 className="font-bold text-xl flex-grow p-0 mt-1">{author}</h2>
                         <Separator className="flex sm:hidden sm:w-full my-2" />
-                        <div className="flex flex-row gap-2">
+                        <div className={`flex flex-row gap-2`}>
                             <Select
                                 value={sortMode}
                                 onValueChange={(value) =>
@@ -142,14 +135,15 @@ export default function Browse() {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {Object.values(SORTING_OPTIONS_POEMS).map((option, index) => (
-                                        <SelectItem key={index} value={option}>
-                                            {option}
-                                        </SelectItem>
-                                    ))}
+                                    {Object.values(SORTING_OPTIONS_POEMS)
+                                        .slice(2)
+                                        .map((option, index) => (
+                                            <SelectItem key={index} value={option}>
+                                                {option}
+                                            </SelectItem>
+                                        ))}
                                 </SelectContent>
                             </Select>
-                            <FilterDialog initiateFetch={fetchBrowsePoems} urlSuffix={'_browse'} />
                         </div>
                     </div>
 
@@ -162,16 +156,14 @@ export default function Browse() {
 
                     {sortedPoems && sortedPoems.length > 0 && (
                         <div
-                            className={`flex flex-col gap-4 w-full animate-blur-in ${isLoading || loading ? 'animate-blur-in-out' : ''}`}
+                            className={`flex flex-col gap-4 w-full ${isLoading ? 'animate-blur-in-out' : 'animate-blur-in'}`}
                         >
                             <p className="border-0 text-muted-foreground text-end px-0 py-0 text-xs">
-                                {hasFilters
-                                    ? `Poems ${currentPage === 1 ? 1 : currentPage * 10 - 10 + 1} to ${
-                                          currentPage * 10 >= sortedPoems.length
-                                              ? sortedPoems.length
-                                              : currentPage * 10
-                                      } (of ${sortedPoems.length} result${sortedPoems.length === 1 ? '' : 's'})`
-                                    : `No filters selected, showing 10 random poems`}
+                                {`Poems ${currentPage === 1 ? 1 : currentPage * 10 - 10 + 1} to ${
+                                    currentPage * 10 >= sortedPoems.length
+                                        ? sortedPoems.length
+                                        : currentPage * 10
+                                } (of ${sortedPoems.length} result${sortedPoems.length === 1 ? '' : 's'})`}
                             </p>
 
                             {sortedPoems
@@ -196,7 +188,7 @@ export default function Browse() {
                                             openPoem={() =>
                                                 isLoading
                                                     ? null
-                                                    : navigate(`/browse/viewer/${getLikeId(poem)}`)
+                                                    : navigate(`/authors/viewer/${getLikeId(poem)}`)
                                             }
                                         />
                                     );

@@ -129,6 +129,25 @@ export const getPoemBySlug = async (slug: string): Promise<Poem | null> => {
     }
 };
 
+export const fetchPoemByAuthor = async (author: string): Promise<Array<Poem> | string> => {
+    const baseUrl = 'https://poetrydb.org';
+    console.log('Fetching poems by author:', author);
+    const url = `${baseUrl}/author/${encodeURIComponent(author)}`;
+    try {
+        const response = await fetch(url);
+        const poems = await response.json();
+        if (poems && poems.length > 0) {
+            console.log('Poems found:', poems);
+            return poems;
+        } else {
+            return 'No poems could be found.';
+        }
+    } catch (error) {
+        console.error(error);
+        return 'An error has occured, try again later';
+    }
+};
+
 // export const getRandomPoem = async (poem: Poem | null): Promise<Poem | null> => {
 //     // TODO: Add passing filters and make it not just 10 line poems
 //     try {

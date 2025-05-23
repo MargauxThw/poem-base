@@ -179,7 +179,11 @@ export default function MyPoems() {
                                             poem={poem}
                                             heart={true}
                                             openPoem={() =>
-                                                navigate(`/my-poems/viewer/${getLikeId(poem)}`)
+                                                isLoading
+                                                    ? null
+                                                    : navigate(
+                                                          `/my-poems/viewer/${getLikeId(poem)}`
+                                                      )
                                             }
                                         />
                                     );
