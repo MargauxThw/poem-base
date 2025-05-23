@@ -34,7 +34,7 @@ export default function Login() {
             if (err instanceof Error && err.message.includes('auth/invalid-credential')) {
                 setError('Your email or password is incorrect');
             } else {
-                setError('An unknown error occurred. Try again later.');
+                setError('An unknown error occurred');
             }
         }
     };
