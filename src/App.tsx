@@ -5,7 +5,6 @@ import Login from './pages/Login.tsx';
 import Home from './pages/Home.tsx';
 import SignUp from './pages/SignUp.tsx';
 import MyPoems from './pages/MyPoems.tsx';
-// import PoemPage from './pages/Poem.tsx';
 import MyPoemsViewer from './pages/MyPoemsViewer';
 import { FONT_OPTIONS, THEME_OPTIONS } from './utils/staticData.ts';
 import { useEffect, useState } from 'react';
@@ -15,6 +14,7 @@ import Browse from './pages/Browse.tsx';
 import Random from './pages/Random.tsx';
 import BrowseViewer from './pages/BrowseViewer.tsx';
 import PublicRoute from './routes/PublicRoute.tsx';
+import { Toaster } from 'sonner';
 
 export default function App() {
     const [fontIndex, setFontIndex] = useState(() => {
@@ -70,6 +70,7 @@ export default function App() {
     useEffect(() => {
         updateFont(fontIndex);
         updateTheme(themeIndex);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -141,6 +142,7 @@ export default function App() {
                     <Route path="/browse/viewer/:slug" element={<BrowseViewer />} />
                 </Routes>
             </div>
+            <Toaster />
         </BrowserRouter>
     );
 }

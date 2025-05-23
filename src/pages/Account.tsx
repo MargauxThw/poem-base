@@ -7,6 +7,7 @@ import PasswordResetDialog from '../components/dialogs/PasswordResetDialog';
 import { useAuthUser } from '@/hooks/useAuthUser';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
 
 interface UserData {
     likeCount: number;
@@ -42,6 +43,7 @@ export default function Account() {
         };
 
         fetchUserData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (loading || dbLoading) {
@@ -58,12 +60,13 @@ export default function Account() {
                         <h2 className="text-lg font-semibold">Profile Information</h2>
                         <Separator />
                         <div>
-                            <label className="block text-sm font-medium">Email</label>
-                            <p className="mt-1 text-gray-900">{userData?.email}</p>
+                            <label className="block text-md font-medium">Email</label>
+                            <p className="text-sm font-regular">{userData?.email}</p>
                         </div>
+                        <Separator />
                         <div>
-                            <label className="block text-sm font-medium">Password</label>
-                            <div className="mt-1 flex items-center justify-between gap-2">
+                            <label className="block text-md font-medium">Password</label>
+                            <div className="flex items-center justify-between gap-2">
                                 <p className="font-mono overflow-hidden mt-2">
                                     {passwordLength ? '•'.repeat(passwordLength) : '••••••••'}
                                 </p>
@@ -74,11 +77,18 @@ export default function Account() {
                         </div>
                         <Separator />
                         <div>
-                            <label className="block text-sm font-medium">Liked Poems</label>
-                            <div className="mt-1 flex items-center justify-between">
-                                <p className="mt-1">{userData?.likeCount || 0} poems</p>
+                            <label className="block text-md font-medium">My Poems</label>
+                            <div className="flex items-center justify-between">
+                                <p className="text-sm font-regular">
+                                    {`${userData?.likeCount || 0} poem${userData?.likeCount === 1 ? '' : 's'}`}
+                                </p>
                                 {/* TODO: Make this like the delete button with an are you sure dialog */}
-                                <Button variant="outline">Unlike all</Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => toast('All poems successfully unliked')}
+                                >
+                                    Unlike all
+                                </Button>
                             </div>
                         </div>
                     </div>
