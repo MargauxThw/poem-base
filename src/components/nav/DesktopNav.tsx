@@ -12,7 +12,9 @@ export default function DesktopNav() {
     return (
         <div className="hidden md:flex">
             <Link to="/" className="mr-4 flex items-center gap-0 md:mr-12">
-                <span className={`text-3xl md:inline-block mr-2`}>{'Poem Base'}</span>
+                <span className={`text-2xl tracking-tight md:inline-block mr-2 font-semibold`}>
+                    {'Poem Base'}
+                </span>
             </Link>
             <nav className="flex items-center gap-4 text-sm md:gap-10">
                 <Link

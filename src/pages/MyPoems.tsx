@@ -93,6 +93,10 @@ export default function MyPoems() {
         }
     }, [likedPoems, sortMode]);
 
+    useEffect(() => {
+        localStorage.setItem('likedPoems', JSON.stringify(sortedPoems));
+    }, [sortedPoems, sortMode]);
+
     const totalPages = useMemo(() => {
         return Math.ceil(sortedPoems.length / 10);
     }, [sortedPoems]);

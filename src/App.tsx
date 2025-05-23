@@ -13,6 +13,7 @@ import Account from './pages/Account';
 import GlobalNav from './components/nav/GlobalNav.tsx';
 import Browse from './pages/Browse.tsx';
 import Random from './pages/Random.tsx';
+import BrowseViewer from './pages/BrowseViewer.tsx';
 
 export default function App() {
     const [fontIndex, setFontIndex] = useState(() => {
@@ -121,6 +122,8 @@ export default function App() {
                             </ProtectedRoute>
                         }
                     />
+
+                    <Route path="/browse/viewer/:slug" element={<BrowseViewer />} />
                 </Routes>
             </div>
         </BrowserRouter>

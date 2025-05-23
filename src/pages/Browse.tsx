@@ -37,14 +37,15 @@ export default function Browse() {
             if (typeof poemList === 'string') {
                 setErrorMessage(poemList);
                 setPoems([]);
-                return;
-            }
-            if (poemList.length === 0) {
+                localStorage.setItem('browsePoems', JSON.stringify([]));
+            } else if (poemList.length === 0) {
                 setErrorMessage('No poems found matching the current filters.');
                 setPoems([]);
-                return;
+                localStorage.setItem('browsePoems', JSON.stringify([]));
+            } else {
+                setPoems(poemList as Poem[]);
+                localStorage.setItem('browsePoems', JSON.stringify(poemList));
             }
-            setPoems(poemList as Poem[]);
         } catch (error) {
             console.error('Error fetching poems:', error);
             setErrorMessage('There was an error fetching poems. Please try again later.');
@@ -98,6 +99,10 @@ export default function Browse() {
                 return poems;
         }
     }, [poems, sortMode]);
+
+    useEffect(() => {
+        localStorage.setItem('browsePoems', JSON.stringify(sortedPoems));
+    }, [sortedPoems, sortMode]);
 
     const totalPages = useMemo(() => {
         return Math.ceil(sortedPoems.length / 10);

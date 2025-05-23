@@ -28,7 +28,15 @@ export default function PoemCard({
                             variant={'outline'}
                             className="text-muted-foreground px-1"
                         >{`${poem.linecount} lines`}</Badge>
-                        {heart ? <Heart fill="red" stroke="none" className="h-4 -ml-1" /> : <></>}
+                        {heart ? (
+                            <Heart
+                                fill="var(--muted-foreground)"
+                                stroke="none"
+                                className="h-4 -ml-1"
+                            />
+                        ) : (
+                            <></>
+                        )}
                     </div>
                 </CardDescription>
                 <Separator />
