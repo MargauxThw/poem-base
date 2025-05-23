@@ -93,9 +93,7 @@ export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: 
                         <Heart
                             fill={isLiked ? 'red' : 'var(--foreground)'}
                             stroke="none"
-                            className={
-                                isLiked ? '' : 'group-hover:fill-[var(--color-accent-foreground)]'
-                            }
+                            className={isLiked ? '' : 'group-hover:fill-[var(--accent-foreground)]'}
                         />
                     </Button>
                 ) : (
@@ -111,7 +109,7 @@ export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: 
                                 <Heart
                                     fill={'var(--foreground)'}
                                     stroke="none"
-                                    className="group-hover:fill-[var(--color-accent-foreground)]"
+                                    className="group-hover:fill-[var(--accent-foreground)]"
                                 />
                             </Button>
                         </PopoverTrigger>
