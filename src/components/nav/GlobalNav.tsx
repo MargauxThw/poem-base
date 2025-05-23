@@ -123,7 +123,7 @@ export default function GlobalNav({
                                 </Link>
                             ) : (
                                 <Link to="/login">
-                                    <Button variant="ghost">Log in</Button>
+                                    <Button variant="outline">Log in</Button>
                                 </Link>
                             )}
                         </nav>
