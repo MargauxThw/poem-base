@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export interface BasePoem {
     title: string;
     author: string;
@@ -20,4 +22,8 @@ export interface PoemFilter {
     authorText?: string;
     titleAbs?: boolean;
     authorAbs?: boolean;
+}
+
+export interface RouteProps {
+    children: ReactNode;
 }

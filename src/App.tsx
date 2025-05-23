@@ -14,6 +14,7 @@ import GlobalNav from './components/nav/GlobalNav.tsx';
 import Browse from './pages/Browse.tsx';
 import Random from './pages/Random.tsx';
 import BrowseViewer from './pages/BrowseViewer.tsx';
+import PublicRoute from './routes/PublicRoute.tsx';
 
 export default function App() {
     const [fontIndex, setFontIndex] = useState(() => {
@@ -93,8 +94,22 @@ export default function App() {
             >
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<SignUp />} />
+                    <Route
+                        path="/login"
+                        element={
+                            <PublicRoute>
+                                <Login />
+                            </PublicRoute>
+                        }
+                    />
+                    <Route
+                        path="/signup"
+                        element={
+                            <PublicRoute>
+                                <SignUp />
+                            </PublicRoute>
+                        }
+                    />
                     <Route path="/random" element={<Random />} />
                     <Route path="/browse" element={<Browse />} />
                     <Route
