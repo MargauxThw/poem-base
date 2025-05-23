@@ -11,21 +11,21 @@ import {
 } from 'firebase/firestore';
 import type { BasePoem, LikedPoem, Poem } from '../utils/types';
 
-export function getLikeId(poem: BasePoem): string {
+export const getLikeId = (poem: BasePoem): string => {
     return encodeURIComponent(`${poem.title}::${poem.author}::${poem.linecount}`);
-}
+};
 
-export function getLikeIdFromSlug(slug: string): string {
+export const getLikeIdFromSlug = (slug: string): string => {
     return encodeURIComponent(slug);
-}
+};
 
-export function getSlugFromPoem(poem: BasePoem): string {
+export const getSlugFromPoem = (poem: BasePoem): string => {
     return `${poem.title}::${poem.author}::${poem.linecount}`;
-}
+};
 
-export function getDateValue(
+export const getDateValue = (
     createdAt: string | { seconds: number; nanoseconds: number } | undefined
-): number {
+): number => {
     if (!createdAt) return 0;
     if (typeof createdAt === 'string') {
         // ISO string
@@ -36,9 +36,9 @@ export function getDateValue(
         return createdAt.seconds * 1000 + Math.floor(createdAt.nanoseconds / 1e6);
     }
     return 0;
-}
+};
 
-export async function likePoem(poem: Poem) {
+export const likePoem = async (poem: Poem) => {
     const uid = auth.currentUser?.uid;
     if (!uid) {
         throw new Error('User is not logged in');
@@ -76,9 +76,9 @@ export async function likePoem(poem: Poem) {
     localStorage.setItem(getSlugFromPoem(poem), JSON.stringify(poem));
 
     return true;
-}
+};
 
-export async function unlikePoem(poem: Poem) {
+export const unlikePoem = async (poem: Poem) => {
     const uid = auth.currentUser?.uid;
     if (!uid) {
         throw new Error('User is not logged in');
@@ -105,9 +105,9 @@ export async function unlikePoem(poem: Poem) {
     });
 
     return true;
-}
+};
 
-export async function getAllLikedPoems(): Promise<Array<LikedPoem>> {
+export const getAllLikedPoems = async (): Promise<Array<LikedPoem>> => {
     const uid = auth.currentUser?.uid;
     if (!uid) {
         throw new Error('User is not logged in');
@@ -125,9 +125,9 @@ export async function getAllLikedPoems(): Promise<Array<LikedPoem>> {
             ...(doc.data() as LikedPoem),
         };
     });
-}
+};
 
-export async function poemIsLiked(poem: Poem): Promise<boolean> {
+export const poemIsLiked = async (poem: Poem): Promise<boolean> => {
     const uid = auth.currentUser?.uid;
     if (!uid) {
         throw new Error('User is not logged in');
@@ -140,4 +140,37 @@ export async function poemIsLiked(poem: Poem): Promise<boolean> {
 
     const likeSnap = await getDoc(likeRef);
     return likeSnap.exists();
-}
+};
+
+export const unlikeAllPoems = async () => {
+    const user = auth.currentUser;
+    if (!user) {
+        throw new Error('User is not logged in');
+    }
+
+    const uid = user.uid;
+
+    const likesRef = collection(db, 'users', uid, 'likes');
+    const userRef = doc(db, 'users', uid);
+
+    const likesSnapshot = await getDocs(likesRef);
+
+    await runTransaction(db, async (transaction) => {
+        const userSnap = await transaction.get(userRef);
+        let failedUnlikes = 0;
+
+        likesSnapshot.docs.forEach((likeDoc) => {
+            try {
+                transaction.delete(likeDoc.ref);
+            } catch {
+                failedUnlikes += 1;
+            }
+        });
+
+        if (userSnap.exists()) {
+            transaction.update(userRef, {
+                likeCount: failedUnlikes,
+            });
+        }
+    });
+};

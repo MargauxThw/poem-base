@@ -155,7 +155,7 @@ export default function Browse() {
                     <Separator />
                     {sortedPoems.length === 0 && (
                         <div className="justify-items-center min-h-full w-full p-4 py-8 animate-blur-wiggle-in">
-                            <p>{errorMessage}</p>
+                            <p className="text-center">{errorMessage}</p>
                         </div>
                     )}
 

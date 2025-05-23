@@ -46,6 +46,7 @@ export default function Random() {
             setPoem(samplePoem);
             updatePoem();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -59,7 +60,7 @@ export default function Random() {
                 >
                     {hasError ? (
                         <>
-                            <p className="animate-blur-wiggle-in">{errorMessage}</p>
+                            <p className="animate-blur-wiggle-in text-center">{errorMessage}</p>
                             <Separator />
                         </>
                     ) : (

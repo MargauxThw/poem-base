@@ -1,4 +1,3 @@
-import { deleteUserAccount } from '@/services/userService';
 import { useState } from 'react';
 import {
     AlertDialog,
@@ -13,26 +12,32 @@ import {
 } from '../ui/alert-dialog';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
-export default function DeleteAccountButton() {
-    const [isDeleting, setIsDeleting] = useState(false);
+import { unlikeAllPoems } from '@/services/likeService';
+
+type UnlikeAllPoemsButtonProps = {
+    fetchUserData: () => Promise<void>;
+};
+
+export default function UnlikeAllPoemsButton({ fetchUserData }: UnlikeAllPoemsButtonProps) {
+    const [isUnliking, setIsUnliking] = useState(false);
 
     return (
-        <AlertDialog open={isDeleting} onOpenChange={setIsDeleting}>
+        <AlertDialog open={isUnliking} onOpenChange={setIsUnliking}>
             <AlertDialogTrigger asChild>
-                <Button variant="destructive">Delete Account</Button>
+                <Button variant="outline">Unlike All Poems</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete your account and
-                        remove your data from our servers.
+                        This action cannot be undone. This will permanently remove your likes from
+                        all poems.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel
                         onClick={() => {
-                            setIsDeleting(false);
+                            setIsUnliking(false);
                         }}
                         asChild
                     >
@@ -41,17 +46,19 @@ export default function DeleteAccountButton() {
                     <AlertDialogAction
                         onClick={async () => {
                             try {
-                                await deleteUserAccount();
-                                toast('Account successfully deleted');
+                                await unlikeAllPoems();
+                                await fetchUserData();
+                                toast('All poems successfully unliked');
                             } catch {
-                                toast('There was an error while deleting your account');
+                                await fetchUserData();
+                                toast('There was an error while unliking all poems');
                             } finally {
-                                setIsDeleting(false);
+                                setIsUnliking(false);
                             }
                         }}
                         asChild
                     >
-                        <Button variant="ghost">Delete Account</Button>
+                        <Button variant="ghost">Unlike All Poems</Button>
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

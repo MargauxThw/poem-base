@@ -39,7 +39,7 @@ export default function MyPoems() {
                 localStorage.setItem('likedPoems', JSON.stringify(response));
 
                 if (response.length === 0) {
-                    setErrorMessage("It doesn't look like you have liked any poems.");
+                    setErrorMessage("You haven't liked any poems yet, try browsing.");
                 } else if (likedPoems.length === 0) {
                     setErrorMessage('None of your liked poems match the current filters.');
                 }
@@ -151,7 +151,7 @@ export default function MyPoems() {
                     <Separator />
                     {sortedPoems.length === 0 && (
                         <div className="justify-items-center min-h-full w-full p-4 py-8 animate-blur-wiggle-in">
-                            <p>{errorMessage}</p>
+                            <p className="text-center">{errorMessage}</p>
                         </div>
                     )}
 
