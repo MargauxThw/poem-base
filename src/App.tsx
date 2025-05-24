@@ -17,6 +17,7 @@ import PublicRoute from './routes/PublicRoute.tsx';
 import { Toaster } from 'sonner';
 import Authors from './pages/Authors.tsx';
 import AuthorsViewer from './pages/AuthorsViewer.tsx';
+import Privacy from './pages/Privacy.tsx';
 
 export default function App() {
     const [fontIndex, setFontIndex] = useState(() => {
@@ -144,6 +145,7 @@ export default function App() {
                     <Route path="/browse/viewer/:slug" element={<BrowseViewer />} />
                     <Route path="/authors/:slug" element={<Authors />} />
                     <Route path="/authors/viewer/:slug" element={<AuthorsViewer />} />
+                    <Route path="/privacy" element={<Privacy />} />
                 </Routes>
             </div>
             <Toaster />
