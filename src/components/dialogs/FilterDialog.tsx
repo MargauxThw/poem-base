@@ -43,6 +43,7 @@ export function FilterDialog({ initiateFetch, urlSuffix }: FilterDialogProps) {
 
     useEffect(() => {
         initialiseFilters();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {

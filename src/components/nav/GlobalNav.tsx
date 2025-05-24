@@ -17,6 +17,7 @@ import ThemeButton from '../buttons/ThemeButton';
 // import FontSizeSlider from '../sliders/FontSizeSlider';
 import MobileNav from './MobileNav';
 import { useAuthUser } from '@/hooks/useAuthUser';
+import { Separator } from '../ui/separator';
 
 type GlobalNavProps = {
     updateFont: (newIndex: number) => void;
@@ -61,44 +62,46 @@ export default function GlobalNav({
                                     </Button>
                                 </SheetTrigger>
                                 <SheetContent className="w-[400px] sm:w-[540px] p-4">
-                                    <SheetHeader>
-                                        <SheetTitle>Are you absolutely sure?</SheetTitle>
+                                    <SheetHeader className="p-0 mt-8">
+                                        <SheetTitle>Style editor</SheetTitle>
                                         <SheetDescription>
-                                            This action cannot be undone. This will permanently
-                                            delete your account and remove your data from our
-                                            servers.
+                                            Customise your reading experience on Poem Base with the
+                                            following options
                                         </SheetDescription>
                                     </SheetHeader>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-around',
-                                            flexWrap: 'nowrap',
-                                            gap: '4px',
-                                            width: '100%',
-                                            backgroundColor: 'bg-amber-400',
-                                        }}
-                                    >
-                                        {FONT_OPTIONS.map((_font, index) => (
-                                            <FontButton
-                                                key={index}
-                                                index={index}
-                                                currentFontIndex={fontIndex}
-                                                updateFont={updateFont}
-                                            />
-                                        ))}
+                                    <Separator />
+                                    <div>
+                                        <h2 className="text-md text-foreground font-semibold pb-2">
+                                            Font family
+                                        </h2>
+                                        <div className="flex flex-row nowrap gap-4 w-full -ml-2">
+                                            {FONT_OPTIONS.map((_font, index) => (
+                                                <FontButton
+                                                    key={index}
+                                                    index={index}
+                                                    currentFontIndex={fontIndex}
+                                                    updateFont={updateFont}
+                                                />
+                                            ))}
+                                        </div>
                                     </div>
-                                    <div className="flex flex-row justify-between items-center mb-4 w100%">
-                                        {THEME_OPTIONS.map((_theme, index) => (
-                                            <ThemeButton
-                                                key={index}
-                                                index={index}
-                                                currentThemeIndex={themeIndex}
-                                                updateTheme={updateTheme}
-                                            />
-                                        ))}
+                                    <Separator />
+                                    <div>
+                                        <h2 className="text-md text-foreground font-semibold pb-2">
+                                            Color palette
+                                        </h2>
+                                        <div className="flex flex-row nowrap gap-4 w-full -ml-1">
+                                            {THEME_OPTIONS.map((_theme, index) => (
+                                                <ThemeButton
+                                                    key={index}
+                                                    index={index}
+                                                    currentThemeIndex={themeIndex}
+                                                    updateTheme={updateTheme}
+                                                />
+                                            ))}
+                                        </div>
                                     </div>
+                                    <Separator />
                                     {/* <div className="mb-4 w100%">
                                         <FontSizeSlider
                                             currentFontSize={fontSize}

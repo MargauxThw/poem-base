@@ -2,16 +2,16 @@ import type { Poem } from './types';
 
 export const FONT_OPTIONS = [
     {
-        class: 'font-theme-serif',
-        label: 'Serif (Literata)',
-        shortLabel: 'Serif',
-        value: "'Literata', serif",
-    },
-    {
         class: 'font-theme-sans',
         label: 'Sans-serif (Inter)',
         shortLabel: 'Sans-serif',
         value: "'Inter', sans-serif",
+    },
+    {
+        class: 'font-theme-serif',
+        label: 'Serif (IBM Plex Serif)',
+        shortLabel: 'Serif',
+        value: "'IBM Plex Serif', serif",
     },
     {
         class: 'font-theme-mono',
@@ -28,11 +28,11 @@ export const FONT_OPTIONS = [
 ];
 
 export const THEME_OPTIONS = [
-    { class: 'theme-light', label: 'light', background: '#FFFFFF', color: '#222222' },
-    { class: 'dark', label: 'dark', background: '#242424', color: '#FFFFFF' },
-    { class: 'theme-sepia', label: 'sepia', background: '#F9EFDA', color: '#594334' },
-    { class: 'theme-blue', label: 'blue', background: '#DDEBF4', color: '#2B3440' },
-    { class: 'theme-green', label: 'green', background: '#CCE6D0', color: '#3D4B43' },
+    { class: 'theme-light', label: 'Light', background: '#FFFFFF', color: '#222222' },
+    { class: 'dark', label: 'Dark', background: '#242424', color: '#FFFFFF' },
+    { class: 'theme-sepia', label: 'Sepia', background: '#F9EFDA', color: '#594334' },
+    { class: 'theme-blue', label: 'Blue', background: '#DDEBF4', color: '#2B3440' },
+    { class: 'theme-green', label: 'Mint', background: '#CCE6D0', color: '#3D4B43' },
 ];
 
 export const samplePoem: Poem = {

@@ -132,7 +132,6 @@ export default function App() {
                             </ProtectedRoute>
                         }
                     />
-                    {/* <Route path="/poem/:slug" element={<PoemPage />} /> */}
                     <Route
                         path="/my-poems/viewer/:slug"
                         element={
