@@ -48,10 +48,10 @@ export default function UnlikeAllPoemsButton({ fetchUserData }: UnlikeAllPoemsBu
                             try {
                                 await unlikeAllPoems();
                                 await fetchUserData();
-                                toast('All poems successfully unliked');
+                                toast.success('All poems successfully unliked');
                             } catch {
                                 await fetchUserData();
-                                toast('There was an error while unliking all poems');
+                                toast.error('There was an error while unliking all poems');
                             } finally {
                                 setIsUnliking(false);
                             }

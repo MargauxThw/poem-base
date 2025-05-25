@@ -65,7 +65,7 @@ export default function PasswordResetDialog({ onPasswordUpdate }: PasswordResetD
             setShowConfirmPassword(false);
             setIsLoading(false);
 
-            toast('Your password has been updated successfully');
+            toast.success('Your password has been updated successfully');
         } catch (error) {
             if (error instanceof Error && error.message.includes('auth/invalid-credential')) {
                 setPasswordError('Incorrect current password');

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../utils/firebaseConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import { ensureUserDoc } from '../services/userService';
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AlertCircle, EyeOff, Eye } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function SignUp() {
     const [email, setEmail] = useState('');
@@ -25,6 +26,21 @@ export default function SignUp() {
         setError('');
         try {
             await createUserWithEmailAndPassword(auth, email, password);
+            if (auth.currentUser && !auth.currentUser.emailVerified) {
+                sendEmailVerification(auth.currentUser, {
+                    url: `${window.location.origin}/`,
+                    handleCodeInApp: true,
+                })
+                    .then(() => {
+                        console.log('Verification email sent.');
+                    })
+                    .catch((error) => {
+                        console.error('Error sending verification email:', error);
+                    });
+            }
+            toast.success(
+                'Account creation success: Please check your email to verify your account before liking poems'
+            );
             await ensureUserDoc();
             const toLike = JSON.parse(localStorage.getItem('to like') || 'null');
             if (toLike) {

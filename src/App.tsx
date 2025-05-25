@@ -18,6 +18,8 @@ import { Toaster } from 'sonner';
 import Authors from './pages/Authors.tsx';
 import AuthorsViewer from './pages/AuthorsViewer.tsx';
 import Privacy from './pages/Privacy.tsx';
+import ForgotPassword from './pages/ForgotPassword.tsx';
+import EmailVerificationReminder from './hooks/emailVerificationReminder.ts';
 
 export default function App() {
     const [fontIndex, setFontIndex] = useState(() => {
@@ -78,6 +80,7 @@ export default function App() {
 
     return (
         <BrowserRouter>
+            <EmailVerificationReminder />
             <GlobalNav
                 updateFont={updateFont}
                 fontIndex={fontIndex}
@@ -111,6 +114,14 @@ export default function App() {
                         element={
                             <PublicRoute>
                                 <SignUp />
+                            </PublicRoute>
+                        }
+                    />
+                    <Route
+                        path="/forgot-password"
+                        element={
+                            <PublicRoute>
+                                <ForgotPassword />
                             </PublicRoute>
                         }
                     />

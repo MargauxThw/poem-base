@@ -69,9 +69,19 @@ export default function Login() {
                                 />
                             </div>
                             <div className="flex-col gap-2 w-full">
-                                <Label htmlFor="password" className="mb-2">
-                                    Password
-                                </Label>
+                                <div className="flex flex-row items-center justify-between w-full">
+                                    <Label htmlFor="password" className="mb-2">
+                                        Password
+                                    </Label>
+                                    <p className="text-muted-foreground text-xs mb-2">
+                                        <Link
+                                            to="/forgot-password"
+                                            className="text-primary hover:underline"
+                                        >
+                                            Forgot Password?
+                                        </Link>
+                                    </p>
+                                </div>
                                 <div className="flex flex-row items-center gap-2 w-full">
                                     <Input
                                         type={showPassword ? 'text' : 'password'}

@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import { Heart } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { useAuthUser } from '@/hooks/useAuthUser';
+import { toast } from 'sonner';
 
 type LikeButtonProps = {
     poem: Poem;
@@ -50,7 +51,16 @@ export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: 
                     setIsLiked(true);
                 }
             } catch (error) {
-                console.error('Error unliking this poem:', error);
+                if (error instanceof Error && error.message.includes('verified')) {
+                    toast.error('Error unliking poem', {
+                        description: 'You must verify your email before unliking poems.',
+                    });
+                } else {
+                    toast.error('Error unliking poem', {
+                        description:
+                            'There was an error unliking this poem. Please try again later.',
+                    });
+                }
                 setIsLiked(true);
             }
         } else {
@@ -63,6 +73,15 @@ export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: 
                 }
             } catch (error) {
                 console.error('Error liking this poem:', error);
+                if (error instanceof Error && error.message.includes('verified')) {
+                    toast.error('Error liking poem', {
+                        description: 'You must verify your email before liking poems.',
+                    });
+                } else {
+                    toast.error('Error liking poem', {
+                        description: 'There was an error liking this poem. Please try again later.',
+                    });
+                }
                 setIsLiked(false);
             }
         }

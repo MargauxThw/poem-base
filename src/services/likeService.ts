@@ -44,6 +44,10 @@ export const likePoem = async (poem: Poem) => {
         throw new Error('User is not logged in');
     }
 
+    if (!auth.currentUser?.emailVerified) {
+        throw new Error('Email not verified');
+    }
+
     console.log('LIKING POEM', poem);
 
     const userRef = doc(db, 'users', uid);
@@ -82,6 +86,10 @@ export const unlikePoem = async (poem: Poem) => {
     const uid = auth.currentUser?.uid;
     if (!uid) {
         throw new Error('User is not logged in');
+    }
+
+    if (!auth.currentUser?.emailVerified) {
+        throw new Error('Email not verified');
     }
 
     const userRef = doc(db, 'users', uid);
@@ -146,6 +154,10 @@ export const unlikeAllPoems = async () => {
     const user = auth.currentUser;
     if (!user) {
         throw new Error('User is not logged in');
+    }
+
+    if (!auth.currentUser?.emailVerified) {
+        throw new Error('Email not verified');
     }
 
     const uid = user.uid;

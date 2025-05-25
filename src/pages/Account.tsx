@@ -7,6 +7,7 @@ import PasswordResetDialog from '../components/dialogs/PasswordResetDialog';
 import { useAuthUser } from '@/hooks/useAuthUser';
 import { Separator } from '@/components/ui/separator';
 import UnlikeAllPoemsButton from '@/components/buttons/UnlikeAllPoemsButton';
+import { Button } from '@/components/ui/button';
 
 interface UserData {
     likeCount: number;
@@ -100,6 +101,22 @@ export default function Account() {
                                 <SignOutButton />
                             </div>
 
+                            {!user?.emailVerified ? (
+                                <>
+                                    <Separator />
+                                    <div className="flex items-center justify-between flex-row gap-4">
+                                        <div>
+                                            <h3 className="text-md font-medium">
+                                                Resend Verification email
+                                            </h3>
+                                            <p className="text-sm font-regular ">
+                                                Verify your email to start liking poems
+                                            </p>
+                                        </div>
+                                        <Button variant="outline">Resend Email</Button>
+                                    </div>
+                                </>
+                            ) : null}
                             <div className="border-t pt-4">
                                 <div className="flex items-center justify-between flex-row gap-4">
                                     <div>

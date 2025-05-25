@@ -42,9 +42,9 @@ export default function DeleteAccountButton() {
                         onClick={async () => {
                             try {
                                 await deleteUserAccount();
-                                toast('Account successfully deleted');
+                                toast.success('Account successfully deleted');
                             } catch {
-                                toast('There was an error while deleting your account');
+                                toast.error('There was an error while deleting your account');
                             } finally {
                                 setIsDeleting(false);
                             }
