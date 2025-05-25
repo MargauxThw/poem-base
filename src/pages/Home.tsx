@@ -89,6 +89,37 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+            <footer className="w-full bg-primary/10 py-2 sm:py-2 animate-blur-wiggle-in text-center text-sm text-muted-foreground flex flex-row gap-2 justify-center items-center flex-wrap bottom-0 fixed">
+                <p className="flex items-center gap-2">
+                    &copy; {new Date().getFullYear()} Poem Base
+                    <span className="sm:inline-block w-1 h-1 rounded-full bg-muted-foreground"></span>
+                </p>
+
+                <p className="flex items-center gap-2">
+                    <a href="/privacy" className="hover:underline">
+                        Privacy
+                    </a>
+                    <span className="sm:inline-block w-1 h-1 rounded-full bg-muted-foreground"></span>
+                </p>
+                <p className="flex items-center gap-2">
+                    <a href="https://github.com/MargauxThw/poem-base" className="hover:underline">
+                        Source
+                    </a>
+                    <span className="sm:inline-block w-1 h-1 rounded-full bg-muted-foreground"></span>
+                </p>
+                <p>
+                    {' '}
+                    By{' '}
+                    <a
+                        href="https://buymeacoffee.com/margauxthw"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline"
+                    >
+                        Margaux
+                    </a>
+                </p>
+            </footer>
         </div>
     );
 }
