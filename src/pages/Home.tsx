@@ -111,7 +111,7 @@ export default function Home() {
                     {' '}
                     By{' '}
                     <a
-                        href="https://buymeacoffee.com/margauxthw"
+                        href="https://buymeacoffee.com/figmargaux"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="hover:underline"
