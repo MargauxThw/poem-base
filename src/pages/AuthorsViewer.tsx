@@ -99,7 +99,7 @@ export default function AuthorsViewer() {
 
                     <PoemLayout poem={poem} />
 
-                    <div className="flex flex-row gap-2 mt-2">
+                    <div className="flex flex-row -mt-2 w-full sm:justify-start sm:relative sm:p-0 justify-center gap-2 sticky bottom-0 py-4 bg-background/95 backdrop-blur items-center">
                         <Button
                             variant={'outline'}
                             onClick={() => navToNewPoem('prev')}
