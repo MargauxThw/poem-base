@@ -8,7 +8,7 @@ export default function PublicRoute({ children }: RouteProps) {
     if (loading) return null;
 
     if (user) {
-        return <Navigate to="/account" replace />;
+        return <Navigate to="/my-poems" replace />;
     }
     return <>{children}</>;
 }
