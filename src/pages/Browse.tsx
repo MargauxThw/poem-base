@@ -16,6 +16,7 @@ import { fetchNewRandomFilteredPoems, getLocalStorageFilters } from '@/services/
 import PoemCard from '@/components/PoemCard';
 import PoemListPagination from '@/components/buttons/PoemListPagination';
 import { useAuthUser } from '@/hooks/useAuthUser';
+import ScrollButton from '@/components/buttons/ScrollButton';
 
 export default function Browse() {
     const navigate = useNavigate();
@@ -120,102 +121,112 @@ export default function Browse() {
     };
 
     return (
-        <div className="mt-12 justify-items-center min-h-full p-4 pb-8 animate-blur-in">
-            <main className="w-full max-w-lg h-fit">
-                <div className="flex flex-col items-start sm:items-start gap-4 w-full">
-                    <div className="flex flex-row w-full justify-between align-middle flex-wrap mb-0 gap-2">
-                        <h2 className="font-bold text-xl flex-grow p-0 mt-1">Browse</h2>
-                        <Separator className="flex sm:hidden sm:w-full my-2" />
-                        <div className="flex flex-row gap-2">
-                            <Select
-                                value={sortMode}
-                                onValueChange={(value) =>
-                                    setSortMode(
-                                        Object.values(SORTING_OPTIONS_POEMS).find(
-                                            (v) => v === value
-                                        ) || sortMode
-                                    )
-                                }
+        <>
+            <ScrollButton isLoading={isLoading} />
+            <div className="mt-12 justify-items-center min-h-full p-4 pb-8 animate-blur-in">
+                <main className="w-full max-w-lg h-fit">
+                    <div className="flex flex-col items-start sm:items-start gap-4 w-full">
+                        <div className="flex flex-row w-full justify-between align-middle flex-wrap mb-0 gap-2">
+                            <h2 className="font-bold text-xl flex-grow p-0 mt-1">Browse</h2>
+                            <Separator className="flex sm:hidden sm:w-full my-2" />
+                            <div className="flex flex-row gap-2">
+                                <Select
+                                    value={sortMode}
+                                    onValueChange={(value) =>
+                                        setSortMode(
+                                            Object.values(SORTING_OPTIONS_POEMS).find(
+                                                (v) => v === value
+                                            ) || sortMode
+                                        )
+                                    }
+                                >
+                                    <SelectTrigger>
+                                        <span className="text-muted-foreground">Sort:</span>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {Object.values(SORTING_OPTIONS_POEMS).map(
+                                            (option, index) => (
+                                                <SelectItem key={index} value={option}>
+                                                    {option}
+                                                </SelectItem>
+                                            )
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                                <FilterDialog
+                                    initiateFetch={fetchBrowsePoems}
+                                    urlSuffix={'_browse'}
+                                />
+                            </div>
+                        </div>
+
+                        <Separator />
+                        {sortedPoems.length === 0 && (
+                            <div className="justify-items-center min-h-full w-full p-4 py-8 animate-blur-wiggle-in">
+                                <p className="text-center">{errorMessage}</p>
+                            </div>
+                        )}
+
+                        {sortedPoems && sortedPoems.length > 0 && (
+                            <div
+                                className={`flex flex-col gap-4 w-full animate-blur-in ${isLoading || loading ? 'animate-blur-in-out' : ''}`}
                             >
-                                <SelectTrigger>
-                                    <span className="text-muted-foreground">Sort:</span>
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {Object.values(SORTING_OPTIONS_POEMS).map((option, index) => (
-                                        <SelectItem key={index} value={option}>
-                                            {option}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <FilterDialog initiateFetch={fetchBrowsePoems} urlSuffix={'_browse'} />
-                        </div>
+                                <p className="border-0 text-muted-foreground text-end px-0 py-0 text-xs">
+                                    {hasFilters
+                                        ? `Poems ${currentPage === 1 ? 1 : currentPage * 10 - 10 + 1} to ${
+                                              currentPage * 10 >= sortedPoems.length
+                                                  ? sortedPoems.length
+                                                  : currentPage * 10
+                                          } (of ${sortedPoems.length} result${sortedPoems.length === 1 ? '' : 's'})`
+                                        : `No filters selected, showing 10 random poems`}
+                                </p>
+
+                                {sortedPoems
+                                    .slice(
+                                        currentPage === 1 ? 0 : currentPage * 10 - 10,
+                                        currentPage * 10 >= sortedPoems.length
+                                            ? sortedPoems.length
+                                            : currentPage * 10
+                                    )
+                                    .map((poem, index) => {
+                                        return (
+                                            <PoemCard
+                                                key={index}
+                                                poem={poem}
+                                                heart={
+                                                    likedPoemsFromDB.find(
+                                                        (p) => getLikeId(p) === getLikeId(poem)
+                                                    )
+                                                        ? true
+                                                        : false
+                                                }
+                                                openPoem={() =>
+                                                    isLoading
+                                                        ? null
+                                                        : navigate(
+                                                              `/browse/viewer/${getLikeId(poem)}`
+                                                          )
+                                                }
+                                            />
+                                        );
+                                    })}
+                            </div>
+                        )}
+
+                        {totalPages !== 1 && sortedPoems.length > 0 && !(isLoading || loading) && (
+                            <>
+                                <Separator />
+                                <PoemListPagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    setCurrentPage={changePage}
+                                />
+                            </>
+                        )}
                     </div>
-
-                    <Separator />
-                    {sortedPoems.length === 0 && (
-                        <div className="justify-items-center min-h-full w-full p-4 py-8 animate-blur-wiggle-in">
-                            <p className="text-center">{errorMessage}</p>
-                        </div>
-                    )}
-
-                    {sortedPoems && sortedPoems.length > 0 && (
-                        <div
-                            className={`flex flex-col gap-4 w-full animate-blur-in ${isLoading || loading ? 'animate-blur-in-out' : ''}`}
-                        >
-                            <p className="border-0 text-muted-foreground text-end px-0 py-0 text-xs">
-                                {hasFilters
-                                    ? `Poems ${currentPage === 1 ? 1 : currentPage * 10 - 10 + 1} to ${
-                                          currentPage * 10 >= sortedPoems.length
-                                              ? sortedPoems.length
-                                              : currentPage * 10
-                                      } (of ${sortedPoems.length} result${sortedPoems.length === 1 ? '' : 's'})`
-                                    : `No filters selected, showing 10 random poems`}
-                            </p>
-
-                            {sortedPoems
-                                .slice(
-                                    currentPage === 1 ? 0 : currentPage * 10 - 10,
-                                    currentPage * 10 >= sortedPoems.length
-                                        ? sortedPoems.length
-                                        : currentPage * 10
-                                )
-                                .map((poem, index) => {
-                                    return (
-                                        <PoemCard
-                                            key={index}
-                                            poem={poem}
-                                            heart={
-                                                likedPoemsFromDB.find(
-                                                    (p) => getLikeId(p) === getLikeId(poem)
-                                                )
-                                                    ? true
-                                                    : false
-                                            }
-                                            openPoem={() =>
-                                                isLoading
-                                                    ? null
-                                                    : navigate(`/browse/viewer/${getLikeId(poem)}`)
-                                            }
-                                        />
-                                    );
-                                })}
-                        </div>
-                    )}
-
-                    {totalPages !== 1 && sortedPoems.length > 0 && !(isLoading || loading) && (
-                        <>
-                            <Separator />
-                            <PoemListPagination
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                setCurrentPage={changePage}
-                            />
-                        </>
-                    )}
-                </div>
-            </main>
-        </div>
+                </main>
+            </div>
+        </>
     );
 }

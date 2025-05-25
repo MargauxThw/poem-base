@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator.tsx';
 import { samplePoem } from '@/utils/staticData.ts';
 import { fetchNewRandomFilteredPoems, getLocalStorageFilters } from '@/services/poemService.ts';
 import { FilterDialog } from '@/components/dialogs/FilterDialog.tsx';
+import ScrollButton from '@/components/buttons/ScrollButton.tsx';
 
 export default function Random() {
     const [poem, setPoem] = useState<Poem | null>(null);
@@ -51,28 +52,32 @@ export default function Random() {
 
     return (
         // <div className="grid grid-rows-[20px_1fr_20px] items-start justify-items-center min-h-full p-4 pb-8 gap-4 animate-blur-in">
-        <div className="mt-12 justify-items-center min-h-full p-4 pb-8 animate-blur-in">
-            {poem && (
-                <main
-                    className={`flex flex-col gap-8 row-start-2 items-start sm:items-start w-full max-w-lg h-fit ${
-                        isNew ? 'animate-blur-in' : ''
-                    } ${isLoading ? 'animate-blur-in-out' : ''}`}
-                >
-                    {hasError ? (
-                        <>
-                            <p className="animate-blur-wiggle-in text-center">{errorMessage}</p>
-                            <Separator />
-                        </>
-                    ) : (
-                        <PoemLayout poem={poem} />
-                    )}
-                    <div className="flex flex-row gap-2">
-                        <FilterDialog initiateFetch={updatePoem} urlSuffix={'_random'} />
-                        <RandomPoemButton setNewPoem={updatePoem} />
-                        {poem && <LikeButton poem={poem} />}
-                    </div>
-                </main>
-            )}
-        </div>
+        <>
+            <ScrollButton isLoading={isLoading} />
+
+            <div className="mt-12 justify-items-center min-h-full p-4 pb-8 animate-blur-in align">
+                {poem && (
+                    <main
+                        className={`flex flex-col gap-8 row-start-2 items-start sm:items-start w-full max-w-lg h-fit ${
+                            isNew ? 'animate-blur-in' : ''
+                        } ${isLoading ? 'animate-blur-in-out' : ''}`}
+                    >
+                        {hasError ? (
+                            <>
+                                <p className="animate-blur-wiggle-in text-center">{errorMessage}</p>
+                                <Separator />
+                            </>
+                        ) : (
+                            <PoemLayout poem={poem} />
+                        )}
+                        <div className="flex flex-row -mt-2 w-full sm:justify-start sm:relative sm:p-0 justify-center gap-2 sticky bottom-0 py-4 bg-background/95 backdrop-blur items-center">
+                            <FilterDialog initiateFetch={updatePoem} urlSuffix={'_random'} />
+                            <RandomPoemButton setNewPoem={updatePoem} />
+                            {poem && <LikeButton poem={poem} />}
+                        </div>
+                    </main>
+                )}
+            </div>
+        </>
     );
 }

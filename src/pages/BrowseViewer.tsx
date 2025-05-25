@@ -8,6 +8,7 @@ import PoemLayout from '@/components/PoemLayout';
 import { Button } from '@/components/ui/button';
 import { MoveLeft, MoveRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import ScrollButton from '@/components/buttons/ScrollButton';
 
 export default function BrowseViewer() {
     const { slug } = useParams<{ slug: string }>();
@@ -71,47 +72,51 @@ export default function BrowseViewer() {
     };
 
     return (
-        <div className="mt-12 justify-items-center min-h-full p-4 pb-8 animate-blur-in">
-            <main
-                className={`flex flex-col gap-8 row-start-2 items-start sm:items-start w-full max-w-lg h-fit ${
-                    isNew ? 'animate-blur-in' : ''
-                } ${isLoading ? 'animate-blur-in-out' : ''}`}
-            >
-                <div className="flex flex-row items-center justify-between w-full">
-                    <Button
-                        variant={'link'}
-                        style={{ padding: 0 }}
-                        onClick={() => navigate('/browse')}
-                    >
-                        <MoveLeft />
-                        Back to Browse
-                    </Button>
-                    <Badge
-                        variant={'secondary'}
-                        className="px-1"
-                    >{`${currentIndex + 1} of ${poems.length}`}</Badge>
-                </div>
+        <>
+            <ScrollButton isLoading={isLoading} />
 
-                <PoemLayout poem={poem} />
+            <div className="mt-12 justify-items-center min-h-full p-4 pb-8 animate-blur-in">
+                <main
+                    className={`flex flex-col gap-8 row-start-2 items-start sm:items-start w-full max-w-lg h-fit ${
+                        isNew ? 'animate-blur-in' : ''
+                    } ${isLoading ? 'animate-blur-in-out' : ''}`}
+                >
+                    <div className="flex flex-row items-center justify-between w-full">
+                        <Button
+                            variant={'link'}
+                            style={{ padding: 0 }}
+                            onClick={() => navigate('/browse')}
+                        >
+                            <MoveLeft />
+                            Back to Browse
+                        </Button>
+                        <Badge
+                            variant={'secondary'}
+                            className="px-1"
+                        >{`${currentIndex + 1} of ${poems.length}`}</Badge>
+                    </div>
 
-                <div className="flex flex-row gap-2 mt-2">
-                    <Button
-                        variant={'outline'}
-                        onClick={() => navToNewPoem('prev')}
-                        disabled={isLoading}
-                    >
-                        <MoveLeft />
-                    </Button>
-                    <Button
-                        variant={'outline'}
-                        onClick={() => navToNewPoem('next')}
-                        disabled={isLoading}
-                    >
-                        <MoveRight />
-                    </Button>
-                    {poem && <LikeButton poem={poem} />}
-                </div>
-            </main>
-        </div>
+                    <PoemLayout poem={poem} />
+
+                    <div className="flex flex-row -mt-2 w-full sm:justify-start sm:relative sm:p-0 justify-center gap-2 sticky bottom-0 py-4 bg-background/95 backdrop-blur items-center">
+                        <Button
+                            variant={'outline'}
+                            onClick={() => navToNewPoem('prev')}
+                            disabled={isLoading}
+                        >
+                            <MoveLeft />
+                        </Button>
+                        <Button
+                            variant={'outline'}
+                            onClick={() => navToNewPoem('next')}
+                            disabled={isLoading}
+                        >
+                            <MoveRight />
+                        </Button>
+                        {poem && <LikeButton poem={poem} />}
+                    </div>
+                </main>
+            </div>
+        </>
     );
 }

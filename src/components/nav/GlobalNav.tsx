@@ -61,7 +61,7 @@ export default function GlobalNav({
                                         </span>
                                     </Button>
                                 </SheetTrigger>
-                                <SheetContent className="w-[400px] sm:w-[540px] p-4">
+                                <SheetContent className="w-[400px] sm:w-[540px] p-4 max-w-full">
                                     <SheetHeader className="p-0 mt-8">
                                         <SheetTitle>Style editor</SheetTitle>
                                         <SheetDescription>
