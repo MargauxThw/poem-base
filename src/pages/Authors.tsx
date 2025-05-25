@@ -16,6 +16,7 @@ import PoemListPagination from '@/components/buttons/PoemListPagination';
 import { useAuthUser } from '@/hooks/useAuthUser';
 import { fetchPoemByAuthor } from '@/services/poemService';
 import ScrollButton from '@/components/buttons/ScrollButton';
+import { toast } from 'sonner';
 
 export default function Authors() {
     const navigate = useNavigate();
@@ -47,8 +48,7 @@ export default function Authors() {
                 setPoems(poemList as Poem[]);
                 localStorage.setItem('authorsPoems', JSON.stringify(poemList));
             }
-        } catch (error) {
-            console.error('Error fetching poems:', error);
+        } catch {
             setErrorMessage('There was an error fetching poems. Please try again later.');
         }
         setIsLoading(false);
@@ -58,8 +58,8 @@ export default function Authors() {
         try {
             const response = await getAllLikedPoems();
             setLikedPoemsFromDB(response);
-        } catch (error) {
-            console.error('Error fetching liked poems:', error);
+        } catch {
+            toast.error('Error fetching liked poems. Please try again later.');
         }
     };
 

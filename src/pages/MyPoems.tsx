@@ -44,8 +44,7 @@ export default function MyPoems() {
                 } else if (likedPoems.length === 0) {
                     setErrorMessage('None of your liked poems match the current filters.');
                 }
-            } catch (error) {
-                console.error('Error fetching liked poems:', error);
+            } catch {
                 setErrorMessage(
                     'There was an error fetching your liked poems. Please try again later.'
                 );

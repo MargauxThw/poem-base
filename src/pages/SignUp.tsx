@@ -32,14 +32,14 @@ export default function SignUp() {
                     handleCodeInApp: true,
                 })
                     .then(() => {
-                        console.log('Verification email sent.');
+                        toast.success('Verification email sent.');
                     })
-                    .catch((error) => {
-                        console.error('Error sending verification email:', error);
+                    .catch(() => {
+                        toast.error('Error sending verification email.');
                     });
             }
             toast.success(
-                'Account creation success: Please check your email to verify your account before liking poems'
+                'Account creation successful: Please check your email to verify your account before liking poems.'
             );
             await ensureUserDoc();
             const toLike = JSON.parse(localStorage.getItem('to like') || 'null');

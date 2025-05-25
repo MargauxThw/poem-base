@@ -26,8 +26,8 @@ export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: 
             try {
                 const liked = await poemIsLiked(poem);
                 setIsLiked(liked);
-            } catch (error) {
-                console.error('Error checking if poem is liked:', error);
+            } catch {
+                setIsLiked(false);
             }
         };
 
@@ -72,7 +72,6 @@ export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: 
                     setIsLiked(false);
                 }
             } catch (error) {
-                console.error('Error liking this poem:', error);
                 if (error instanceof Error && error.message.includes('verified')) {
                     toast.error('Error liking poem', {
                         description: 'You must verify your email before liking poems.',
@@ -85,8 +84,6 @@ export default function LikeButton({ poem, initiateLikeLoading, onLikeChange }: 
                 setIsLiked(false);
             }
         }
-
-        console.log('Like state changed:', isLiked);
 
         if (onLikeChange) {
             onLikeChange();

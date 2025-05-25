@@ -16,9 +16,6 @@ export async function ensureUserDoc() {
         await setDoc(userRef, {
             likeCount: 0,
         });
-        console.log('User doc created');
-    } else {
-        console.log('User doc exists');
     }
 }
 
@@ -43,7 +40,6 @@ export async function deleteUserAccount() {
 
     // Delete the user account
     await deleteUser(user);
-    console.log('User account deleted ON SERVICE', user);
 }
 
 export const resetPassword = async (currentPassword: string, newPassword: string) => {

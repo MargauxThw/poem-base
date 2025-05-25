@@ -4,10 +4,8 @@ import type { LikedPoem, Poem, PoemFilter } from '../utils/types';
 const getPoemFromCache = (slug: string): Poem | null => {
     const poem = localStorage.getItem(slug);
     if (poem) {
-        console.log('Poem found in cache', slug);
         return JSON.parse(poem);
     }
-    console.log('Poem not found in cache', slug);
     return null;
 };
 
@@ -98,7 +96,6 @@ export const getPoemBySlug = async (slug: string): Promise<Poem | null> => {
         params[0]
     )}:abs;${encodeURIComponent(params[1])}:abs`;
 
-    console.log(url, 'URL');
     try {
         const response = await fetch(url).then((res) => {
             if (!res.ok) {
@@ -106,8 +103,6 @@ export const getPoemBySlug = async (slug: string): Promise<Poem | null> => {
             }
             return res.json();
         });
-
-        console.log('RESPONSE: ', response);
 
         if (response && response.length > 0) {
             const poemData = response[0];
@@ -117,71 +112,37 @@ export const getPoemBySlug = async (slug: string): Promise<Poem | null> => {
                 linecount: poemData.linecount,
                 lines: poemData.lines,
             };
-            console.log('Poem added to cache', slug);
+
             localStorage.setItem(slug, JSON.stringify(poem));
             return poem;
         } else {
             return null;
         }
-    } catch (error) {
-        console.error(error);
+    } catch {
         return null;
     }
 };
 
 export const fetchPoemByAuthor = async (author: string): Promise<Array<Poem> | string> => {
     const baseUrl = 'https://poetrydb.org';
-    console.log('Fetching poems by author:', author);
     const url = `${baseUrl}/author/${encodeURIComponent(author)}`;
     try {
         const response = await fetch(url);
         const poems = await response.json();
         if (poems && poems.length > 0) {
-            console.log('Poems found:', poems);
             return poems;
         } else {
             return 'No poems could be found.';
         }
-    } catch (error) {
-        console.error(error);
+    } catch {
         return 'An error has occured, try again later';
     }
 };
-
-// export const getRandomPoem = async (poem: Poem | null): Promise<Poem | null> => {
-//     // TODO: Add passing filters and make it not just 10 line poems
-//     try {
-//         const response = await fetch('https://poetrydb.org/linecount/10');
-//         const data = await response.json();
-//         if (data && data.length > 0) {
-//             let randomPoem = data[(Math.random() * data.length) | 0];
-//             while (poem != null && randomPoem.title === poem.title && data.length > 1) {
-//                 randomPoem = data[(Math.random() * data.length) | 0];
-//             }
-
-//             const fetchedPoem: Poem = {
-//                 title: randomPoem.title,
-//                 author: randomPoem.author,
-//                 linecount: randomPoem.lines.filter((line: string) => line.trim() !== '').length,
-//                 lines: randomPoem.lines,
-//             };
-
-//             return fetchedPoem;
-//         }
-//     } catch (error) {
-//         console.error('Error fetching random poem:', error);
-//         return null;
-//     }
-//     return null;
-// };
-
 export const fetchNewRandomFilteredPoems = async (
     poemFilter: PoemFilter,
     forSearchDefault?: boolean
 ): Promise<Array<Poem> | string> => {
     const baseUrl = 'https://poetrydb.org';
-    console.log('Fetching new random poems with filters:', poemFilter);
-
     let inputFields = '';
     let searchTerms = '';
     if (
@@ -236,18 +197,15 @@ export const fetchNewRandomFilteredPoems = async (
     }
 
     try {
-        console.log(baseUrl + responseTail);
         const response = await fetch(baseUrl + responseTail);
         const poems = await response.json();
 
         if (poems && poems.length > 0) {
-            console.log('Poems found:', poems);
             return poems;
         } else {
             return 'No poems could be found. Try adjusting the filters.';
         }
-    } catch (error) {
-        console.error(error);
+    } catch {
         return 'An error has occured, try again later';
     }
 };

@@ -48,8 +48,6 @@ export const likePoem = async (poem: Poem) => {
         throw new Error('Email not verified');
     }
 
-    console.log('LIKING POEM', poem);
-
     const userRef = doc(db, 'users', uid);
     const likeId = getLikeId(poem);
     const likeRef = doc(db, 'users', uid, 'likes', likeId);
@@ -140,8 +138,6 @@ export const poemIsLiked = async (poem: Poem): Promise<boolean> => {
     if (!uid) {
         throw new Error('User is not logged in');
     }
-
-    console.log('CHECKING IS LIKED', poem);
 
     const likeId = getLikeId(poem);
     const likeRef = doc(db, 'users', uid, 'likes', likeId);

@@ -22,23 +22,17 @@ export default function MyPoemsViewer() {
     const [isNew, setIsNew] = useState(false);
 
     const fetchPoems = useCallback(async () => {
-        console.log('Running fetchPoems');
-
         let likedPoems: LikedPoem[] = [];
         const stored = localStorage.getItem('likedPoems');
 
         likedPoems = stored ? JSON.parse(stored) : [];
         if (likedPoems.length === 0) {
-            console.log('FETCHING FROM DB');
             likedPoems = await getAllLikedPoems();
-        } else {
-            console.log(likedPoems, 'Stored poems USED');
         }
 
         setPoems(likedPoems);
 
         const idx = likedPoems.findIndex((p) => {
-            console.log(slug);
             return getLikeId(p) === getLikeIdFromSlug(slug ?? '');
         });
         setCurrentIndex(idx >= 0 ? idx : 0);
@@ -72,7 +66,6 @@ export default function MyPoemsViewer() {
     const navToNewPoem = (direction: 'next' | 'prev') => {
         setIsNew(false);
         setIsLoading(true);
-        console.log('Running getNavPoemLikeId', direction);
         const localPoems = JSON.parse(localStorage.getItem('likedPoems') || '[]');
         if (!localPoems || localPoems.length === 0) {
             navigate('/my-poems');
@@ -91,7 +84,6 @@ export default function MyPoemsViewer() {
         } else if (new_index >= localPoems.length) {
             new_index = 0;
         }
-        console.log('New index', isUnliked, currentIndex, new_index, localPoems, poems);
         navigate(`/my-poems/viewer/${getLikeId(localPoems[new_index])}`);
         setIsLoading(false);
         setIsNew(true);

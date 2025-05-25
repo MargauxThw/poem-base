@@ -12,7 +12,6 @@ export default function ScrollButton({ isLoading }: { isLoading: boolean }) {
             const atBottom = scrollPosition >= document.body.offsetHeight - threshold;
             setShowScrollButton(!atBottom);
         };
-        console.log('ScrollButton mounted', isLoading);
 
         window.addEventListener('scroll', handleScroll);
         handleScroll();

@@ -20,8 +20,6 @@ export default function BrowseViewer() {
     const [isNew, setIsNew] = useState(false);
 
     const fetchPoems = useCallback(async () => {
-        console.log('Running fetchPoems');
-
         let browsePoems: Poem[] = [];
         const stored = localStorage.getItem('browsePoems');
 
@@ -30,7 +28,6 @@ export default function BrowseViewer() {
         setPoems(browsePoems);
 
         const idx = browsePoems.findIndex((p) => {
-            console.log(slug);
             return getLikeId(p) === getLikeIdFromSlug(slug ?? '');
         });
         setCurrentIndex(idx >= 0 ? idx : 0);

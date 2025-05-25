@@ -8,6 +8,7 @@ import { useAuthUser } from '@/hooks/useAuthUser';
 import { Separator } from '@/components/ui/separator';
 import UnlikeAllPoemsButton from '@/components/buttons/UnlikeAllPoemsButton';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 interface UserData {
     likeCount: number;
@@ -33,8 +34,8 @@ export default function Account() {
                 // Get password length from user metadata if available
                 setPasswordLength(userDoc.data().passwordLength || null);
             }
-        } catch (error) {
-            console.error('Error fetching user data:', error);
+        } catch {
+            toast.error('Error fetching user data:');
         } finally {
             setDBLoading(false);
         }
