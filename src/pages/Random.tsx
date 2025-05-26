@@ -51,7 +51,6 @@ export default function Random() {
     }, []);
 
     return (
-        // <div className="grid grid-rows-[20px_1fr_20px] items-start justify-items-center min-h-full p-4 pb-8 gap-4 animate-blur-in">
         <>
             <ScrollButton isLoading={isLoading} />
 

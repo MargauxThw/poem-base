@@ -61,34 +61,6 @@ function PaginationLink({
     );
 }
 
-// type PaginationLinkProps = {
-// 	isActive?: boolean;
-// 	isDisabled?: boolean;
-// } & Pick<ButtonProps, "size"> &
-// 	React.ComponentProps<typeof Link>;
-
-// const PaginationLink = ({
-// 	className,
-// 	isActive,
-//   isDisabled,
-// 	size = "icon",
-// 	...props
-// }: PaginationLinkProps) => (
-// 	<Link
-// 		aria-current={isActive ? "page" : undefined}
-// 		className={cn(
-// 			buttonVariants({
-// 				variant: isActive ? "ghost" : isDisabled ? "secondary" : "outline",
-// 				size,
-// 			}),
-//       isDisabled ? "opacity-50" : "",
-// 			className
-// 		)}
-// 		{...props}
-// 	/>
-// );
-// PaginationLink.displayName = "PaginationLink";
-
 function PaginationPrevious({ className, ...props }: React.ComponentProps<typeof PaginationLink>) {
     return (
         <PaginationLink

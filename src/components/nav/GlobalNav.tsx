@@ -10,11 +10,9 @@ import {
     SheetTrigger,
 } from '@/components/ui/sheet';
 import { Button } from '../ui/button';
-// import LineHeightSlider from '../sliders/LineHeightSlider';
 import { FONT_OPTIONS, THEME_OPTIONS } from '@/utils/staticData';
 import FontButton from '../buttons/FontButton';
 import ThemeButton from '../buttons/ThemeButton';
-// import FontSizeSlider from '../sliders/FontSizeSlider';
 import MobileNav from './MobileNav';
 import { useAuthUser } from '@/hooks/useAuthUser';
 import { Separator } from '../ui/separator';
@@ -24,10 +22,6 @@ type GlobalNavProps = {
     fontIndex: number;
     updateTheme: (newIndex: number) => void;
     themeIndex: number;
-    // updateFontSize: (newSize: number) => void;
-    // fontSize: number;
-    // updateLineHeight: (newSize: number) => void;
-    // lineHeight: number;
 };
 
 export default function GlobalNav({
@@ -35,10 +29,6 @@ export default function GlobalNav({
     fontIndex,
     updateTheme,
     themeIndex,
-    // updateFontSize,
-    // fontSize,
-    // updateLineHeight,
-    // lineHeight,
 }: GlobalNavProps) {
     const { user, loading } = useAuthUser();
 
@@ -102,18 +92,6 @@ export default function GlobalNav({
                                         </div>
                                     </div>
                                     <Separator />
-                                    {/* <div className="mb-4 w100%">
-                                        <FontSizeSlider
-                                            currentFontSize={fontSize}
-                                            updateFontSize={updateFontSize}
-                                        />
-                                    </div>
-                                    <div className="mb-4 w100%">
-                                        <LineHeightSlider
-                                            currentLineHeight={lineHeight}
-                                            updateLineHeight={updateLineHeight}
-                                        />
-                                    </div> */}
                                 </SheetContent>
                             </Sheet>
 

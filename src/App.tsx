@@ -1,4 +1,3 @@
-// Example in App.tsx or your routes file
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import Login from './pages/Login.tsx';
@@ -71,16 +70,6 @@ export default function App() {
             });
     };
 
-    // const [fontSize, setFontSize] = useState(() => {
-    //     const stored = localStorage.getItem('font_size');
-    //     return stored ? Number(stored) : 100;
-    // });
-
-    // const [lineHeight, setLineHeight] = useState(() => {
-    //     const stored = localStorage.getItem('line_height');
-    //     return stored ? Number(stored) : 1.5;
-    // });
-
     const updateFont = (newIndex: number) => {
         setFontIndex(newIndex);
         localStorage.setItem('font_index', String(newIndex));
@@ -99,16 +88,6 @@ export default function App() {
         updateFavicon(fontIndex, newIndex);
     };
 
-    // const updateLineHeight = (newSize: number) => {
-    //     setLineHeight(newSize);
-    //     localStorage.setItem('line_height', String(newSize));
-    // };
-
-    // const updateFontSize = (newSize: number) => {
-    //     setFontSize(newSize);
-    //     localStorage.setItem('font_size', String(newSize));
-    // };
-
     useEffect(() => {
         updateFont(fontIndex);
         updateTheme(themeIndex);
@@ -125,17 +104,11 @@ export default function App() {
                 fontIndex={fontIndex}
                 updateTheme={updateTheme}
                 themeIndex={themeIndex}
-                // updateFontSize={updateFontSize}
-                // fontSize={fontSize}
-                // updateLineHeight={updateLineHeight}
-                // lineHeight={lineHeight}
             />
 
             <div
                 style={{
                     width: '100vw',
-                    // fontSize: `${fontSize}%`,
-                    // lineHeight: `${lineHeight}em`,
                 }}
             >
                 <Routes>
