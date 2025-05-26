@@ -20,6 +20,8 @@ import AuthorsViewer from './pages/AuthorsViewer.tsx';
 import Privacy from './pages/Privacy.tsx';
 import ForgotPassword from './pages/ForgotPassword.tsx';
 import EmailVerificationReminder from './hooks/emailVerificationReminder.ts';
+import NotFound from './pages/NotFound.tsx';
+import Verify from './pages/Verify.tsx';
 
 export default function App() {
     const [fontIndex, setFontIndex] = useState(() => {
@@ -35,6 +37,38 @@ export default function App() {
               ? 1
               : 0;
     });
+
+    const updateFavicon = (tempFontIndex?: number, tempThemeIndex?: number) => {
+        if (tempFontIndex === undefined) {
+            tempFontIndex = fontIndex;
+        }
+        if (tempThemeIndex === undefined) {
+            tempThemeIndex = themeIndex;
+        }
+        const fontClass = FONT_OPTIONS[tempFontIndex].class;
+        const iconPath = `./src/assets/${fontClass}-icon.svg`;
+
+        fetch(iconPath)
+            .then((res) => res.text())
+            .then((svgText) => {
+                const computed = getComputedStyle(document.body);
+                const bg = computed.getPropertyValue('--background').trim() || '#fff';
+                const fg = computed.getPropertyValue('--accent-foreground').trim() || '#222';
+
+                const newSvg = svgText.replace(/white/g, bg).replace(/black/g, fg);
+
+                const svgDataUrl = `data:image/svg+xml;base64,${btoa(newSvg)}`;
+
+                let link = document.querySelector("link[rel='icon']") as HTMLLinkElement | null;
+                if (!link) {
+                    link = document.createElement('link');
+                    link.rel = 'icon';
+                    document.head.appendChild(link);
+                }
+                link.type = 'image/svg+xml';
+                link.href = svgDataUrl;
+            });
+    };
 
     // const [fontSize, setFontSize] = useState(() => {
     //     const stored = localStorage.getItem('font_size');
@@ -52,6 +86,7 @@ export default function App() {
         const font_classes = FONT_OPTIONS.map((f) => f.class);
         document.body.classList.remove(...font_classes);
         document.body.classList.add(font_classes[newIndex]);
+        updateFavicon(newIndex, themeIndex);
     };
 
     const updateTheme = (newIndex: number) => {
@@ -60,6 +95,7 @@ export default function App() {
         const theme_classes = THEME_OPTIONS.map((t) => t.class);
         document.body.classList.remove(...theme_classes);
         document.body.classList.add(theme_classes[newIndex]);
+        updateFavicon(fontIndex, newIndex);
     };
 
     // const updateLineHeight = (newSize: number) => {
@@ -75,6 +111,8 @@ export default function App() {
     useEffect(() => {
         updateFont(fontIndex);
         updateTheme(themeIndex);
+        updateFavicon(fontIndex, themeIndex);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -156,6 +194,8 @@ export default function App() {
                     <Route path="/authors/:slug" element={<Authors />} />
                     <Route path="/authors/viewer/:slug" element={<AuthorsViewer />} />
                     <Route path="/privacy" element={<Privacy />} />
+                    <Route path="/verify" element={<Verify />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </div>
             <Toaster />

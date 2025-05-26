@@ -28,7 +28,7 @@ export default function SignUp() {
             await createUserWithEmailAndPassword(auth, email, password);
             if (auth.currentUser && !auth.currentUser.emailVerified) {
                 sendEmailVerification(auth.currentUser, {
-                    url: `${window.location.origin}/`,
+                    url: `${window.location.origin}/verify`,
                     handleCodeInApp: true,
                 })
                     .then(() => {

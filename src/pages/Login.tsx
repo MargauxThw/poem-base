@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../utils/firebaseConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import { ensureUserDoc } from '../services/userService';
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -29,7 +30,22 @@ export default function Login() {
                 localStorage.removeItem('to like');
                 await likePoem(toLike);
             }
-            navigate('/my-poems');
+
+            if (auth.currentUser && !auth.currentUser.emailVerified) {
+                try {
+                    sendEmailVerification(auth.currentUser, {
+                        url: `${window.location.origin}/verify`,
+                        handleCodeInApp: true,
+                    });
+                } catch (err: unknown) {
+                    toast.error(
+                        'Failed to send email: ' + (err as Error)?.message || 'Unknown error'
+                    );
+                }
+                navigate('/verify');
+            } else {
+                navigate('/my-poems');
+            }
         } catch (err: unknown) {
             if (err instanceof Error && err.message.includes('auth/invalid-credential')) {
                 setError('Your email or password is incorrect');
