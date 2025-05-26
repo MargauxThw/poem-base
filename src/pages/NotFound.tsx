@@ -6,7 +6,7 @@ export default function NotFound() {
     const navigate = useNavigate();
 
     return (
-        <div className="mt-12 justify-items-center min-h-full p-4 pb-8">
+        <div className="mt-12 flex justify-center min-h-full p-4 pb-8">
             <main className="w-full max-w-lg h-fit">
                 <div className="flex flex-col items-center gap-4 w-full">
                     <h1 className="font-bold text-xl flex-grow p-0 mt-1">404 - Page Not Found</h1>

@@ -2,7 +2,7 @@ import { Separator } from '@/components/ui/separator';
 
 export default function Privacy() {
     return (
-        <div className="mt-12 justify-items-center min-h-full p-4 pb-8 animate-blur-in">
+        <div className="mt-12 flex justify-center min-h-full p-4 pb-8 animate-blur-in">
             <main className="w-full max-w-lg h-fit">
                 <h2 className="font-medium text-xl flex-grow p-0 mt-1">
                     Privacy Policy for Poem Base

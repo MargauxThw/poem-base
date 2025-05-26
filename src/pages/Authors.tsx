@@ -117,7 +117,7 @@ export default function Authors() {
         <>
             <ScrollButton isLoading={isLoading} />
 
-            <div className="mt-12 justify-items-center min-h-full p-4 pb-8 animate-blur-in">
+            <div className="mt-12 flex justify-center min-h-full p-4 pb-8 animate-blur-in">
                 <main className="w-full max-w-lg h-fit">
                     <div className="flex flex-col items-start sm:items-start gap-4 w-full">
                         <div className="flex flex-row w-full justify-between align-middle flex-wrap mb-0 gap-2">
@@ -153,7 +153,7 @@ export default function Authors() {
 
                         <Separator />
                         {sortedPoems.length === 0 && (
-                            <div className="justify-items-center min-h-full w-full p-4 py-8 animate-blur-wiggle-in">
+                            <div className="flex justify-center min-h-full w-full p-4 py-8 animate-blur-wiggle-in">
                                 <p className="text-center">{errorMessage}</p>
                             </div>
                         )}
