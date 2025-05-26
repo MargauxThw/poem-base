@@ -1,54 +1,28 @@
-# React + TypeScript + Vite
+# Poem Base
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Poem Base is a customisable poetry browser and reader built with React, TypeScript, Tailwind, shadcn and Vite.
 
-Currently, two official plugins are available:
+Explore thousands of poems, filter by author or theme, and save your favorites. The app features user authentication, poem liking, and a beautiful, simple UI.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 🔍 **Browse & Search:** Explore poems by author, title, or line count.
+- ❤️ **Like & Save:** Save your favorite poems to your account.
+- 👤 **User Accounts:** Sign up, log in, and manage your liked poems.
+- 🎨 **Customizable:** Choose your font and color theme for the best reading experience.
+- 📱 **Responsive:** Works great on desktop and mobile.
+- 🔒 **Privacy:** Your data is secure and never sold. Plus no ads!
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## License
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+This project uses data from the [PoetryDB API](https://poetrydb.org/) (licensed under GNU GPL), but all application code is licensed under the MIT License.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+---
+
+## Disclaimer
+
+All poems displayed are either in the public domain or freely available through open APIs. This site does not claim ownership over any poem text.
