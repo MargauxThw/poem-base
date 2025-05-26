@@ -57,7 +57,7 @@ export default function App() {
 
                 const newSvg = svgText.replace(/white/g, bg).replace(/black/g, fg);
 
-                const svgDataUrl = `data:image/svg+xml;base64,${btoa(newSvg)}`;
+                const svgDataUrl = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(newSvg)))}`;
 
                 let link = document.querySelector("link[rel='icon']") as HTMLLinkElement | null;
                 if (!link) {
