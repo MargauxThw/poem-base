@@ -56,8 +56,9 @@ export default function App() {
                 const fg = computed.getPropertyValue('--accent-foreground').trim() || '#222';
 
                 const newSvg = svgText.replace(/white/g, bg).replace(/black/g, fg);
+                const svgDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(newSvg)}`;
 
-                const svgDataUrl = `data:image/svg+xml;base64,${btoa(encodeURIComponent(newSvg))}`;
+                console.log(svgDataUrl);
 
                 let link = document.querySelector("link[rel='icon']") as HTMLLinkElement | null;
                 if (!link) {
