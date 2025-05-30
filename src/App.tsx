@@ -98,7 +98,7 @@ export default function App() {
 
     return (
         <>
-            <Analytics mode="production" />
+            <Analytics />
 
             <BrowserRouter>
                 <EmailVerificationReminder />
