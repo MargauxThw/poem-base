@@ -22,6 +22,7 @@ import EmailVerificationReminder from './hooks/emailVerificationReminder.ts';
 import NotFound from './pages/NotFound.tsx';
 import Verify from './pages/Verify.tsx';
 import Terms from './pages/Terms.tsx';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
     const [fontIndex, setFontIndex] = useState(() => {
@@ -96,83 +97,86 @@ export default function App() {
     }, []);
 
     return (
-        <BrowserRouter>
-            <EmailVerificationReminder />
-            <GlobalNav
-                updateFont={updateFont}
-                fontIndex={fontIndex}
-                updateTheme={updateTheme}
-                themeIndex={themeIndex}
-            />
+        <>
+            <Analytics mode="production" />
 
-            <div
-                style={{
-                    width: '100vw',
-                }}
-            >
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route
-                        path="/login"
-                        element={
-                            <PublicRoute>
-                                <Login />
-                            </PublicRoute>
-                        }
-                    />
-                    <Route
-                        path="/signup"
-                        element={
-                            <PublicRoute>
-                                <SignUp />
-                            </PublicRoute>
-                        }
-                    />
-                    <Route
-                        path="/forgot-password"
-                        element={
-                            <PublicRoute>
-                                <ForgotPassword />
-                            </PublicRoute>
-                        }
-                    />
-                    <Route path="/random" element={<Random />} />
-                    <Route path="/browse" element={<Browse />} />
-                    <Route
-                        path="/my-poems"
-                        element={
-                            <ProtectedRoute>
-                                <MyPoems />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/account"
-                        element={
-                            <ProtectedRoute>
-                                <Account />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/my-poems/viewer/:slug"
-                        element={
-                            <ProtectedRoute>
-                                <MyPoemsViewer />
-                            </ProtectedRoute>
-                        }
-                    />
+            <BrowserRouter>
+                <EmailVerificationReminder />
+                <GlobalNav
+                    updateFont={updateFont}
+                    fontIndex={fontIndex}
+                    updateTheme={updateTheme}
+                    themeIndex={themeIndex}
+                />
+                <div
+                    style={{
+                        width: '100vw',
+                    }}
+                >
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route
+                            path="/login"
+                            element={
+                                <PublicRoute>
+                                    <Login />
+                                </PublicRoute>
+                            }
+                        />
+                        <Route
+                            path="/signup"
+                            element={
+                                <PublicRoute>
+                                    <SignUp />
+                                </PublicRoute>
+                            }
+                        />
+                        <Route
+                            path="/forgot-password"
+                            element={
+                                <PublicRoute>
+                                    <ForgotPassword />
+                                </PublicRoute>
+                            }
+                        />
+                        <Route path="/random" element={<Random />} />
+                        <Route path="/browse" element={<Browse />} />
+                        <Route
+                            path="/my-poems"
+                            element={
+                                <ProtectedRoute>
+                                    <MyPoems />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/account"
+                            element={
+                                <ProtectedRoute>
+                                    <Account />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/my-poems/viewer/:slug"
+                            element={
+                                <ProtectedRoute>
+                                    <MyPoemsViewer />
+                                </ProtectedRoute>
+                            }
+                        />
 
-                    <Route path="/browse/viewer/:slug" element={<BrowseViewer />} />
-                    <Route path="/authors/:slug" element={<Authors />} />
-                    <Route path="/authors/viewer/:slug" element={<AuthorsViewer />} />
-                    <Route path="/privacy" element={<Privacy />} />
-                    <Route path="/verify" element={<Verify />} />
-                    <Route path="/terms" element={<Terms />} />
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </div>
-            <Toaster />
-        </BrowserRouter>
+                        <Route path="/browse/viewer/:slug" element={<BrowseViewer />} />
+                        <Route path="/authors/:slug" element={<Authors />} />
+                        <Route path="/authors/viewer/:slug" element={<AuthorsViewer />} />
+                        <Route path="/privacy" element={<Privacy />} />
+                        <Route path="/verify" element={<Verify />} />
+                        <Route path="/terms" element={<Terms />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </div>
+                <Toaster />
+            </BrowserRouter>
+        </>
     );
 }

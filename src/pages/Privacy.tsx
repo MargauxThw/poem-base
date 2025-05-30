@@ -88,7 +88,9 @@ export default function Privacy() {
                         </li>
                         <li className="list-disc list-outside ml-8">
                             Vercel: Our hosting provider. Vercel may collect anonymized usage data
-                            and logs for performance and error tracking. See{' '}
+                            and logs for performance and error tracking, and may also collect
+                            anonymous usage analytics to help us understand how the site is used.
+                            See{' '}
                             <a
                                 href="https://vercel.com/legal/privacy-policy"
                                 className="underline"
@@ -138,7 +140,11 @@ export default function Privacy() {
                     <h2 className="text-md font-bold mt-4">7. Contact Us</h2>
                     <p>
                         If you have any questions about this policy or your data, please contact us
-                        at: figmargaux@gmail.com
+                        at{' '}
+                        <a href="mailto:figmargaux@gmail.com" className="underline">
+                            figmargaux@gmail.com
+                        </a>
+                        .
                     </p>
                 </div>
             </main>
