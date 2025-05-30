@@ -165,6 +165,17 @@ export default function SignUp() {
                             <Button variant={'link'}>Already have an account? Log in</Button>
                         </Link>
                     </form>
+                    <p className="text-center text-xs text-muted-foreground bottom-4 fixed">
+                        By signing up, you agree to our{' '}
+                        <Link to="/terms" className="text-primary hover:underline">
+                            Terms of Service
+                        </Link>{' '}
+                        and{' '}
+                        <Link to="/privacy" className="text-primary hover:underline">
+                            Privacy Policy
+                        </Link>
+                        .
+                    </p>
                 </div>
             </main>
         </div>

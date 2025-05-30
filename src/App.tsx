@@ -21,6 +21,7 @@ import ForgotPassword from './pages/ForgotPassword.tsx';
 import EmailVerificationReminder from './hooks/emailVerificationReminder.ts';
 import NotFound from './pages/NotFound.tsx';
 import Verify from './pages/Verify.tsx';
+import Terms from './pages/Terms.tsx';
 
 export default function App() {
     const [fontIndex, setFontIndex] = useState(() => {
@@ -167,6 +168,7 @@ export default function App() {
                     <Route path="/authors/viewer/:slug" element={<AuthorsViewer />} />
                     <Route path="/privacy" element={<Privacy />} />
                     <Route path="/verify" element={<Verify />} />
+                    <Route path="/terms" element={<Terms />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </div>

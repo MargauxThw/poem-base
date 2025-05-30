@@ -125,6 +125,17 @@ export default function Login() {
                             <Button variant={'link'}>Don't have an account? Sign up</Button>
                         </Link>
                     </form>
+                    <p className="text-center text-xs text-muted-foreground bottom-4 fixed">
+                        By logging in, you agree to our{' '}
+                        <Link to="/terms" className="text-primary hover:underline">
+                            Terms of Service
+                        </Link>{' '}
+                        and{' '}
+                        <Link to="/privacy" className="text-primary hover:underline">
+                            Privacy Policy
+                        </Link>
+                        .
+                    </p>
                 </div>
             </main>
         </div>
