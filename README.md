@@ -11,7 +11,7 @@ Explore thousands of poems, filter by author or theme, and save your favorites. 
 - 🔍 **Browse & Search:** Explore poems by author, title, or line count.
 - ❤️ **Like & Save:** Save your favorite poems to your account.
 - 👤 **User Accounts:** Sign up, log in, and manage your liked poems.
-- 🎨 **Customizable:** Choose your font and color theme for the best reading experience.
+- 🎨 **Customisable:** Choose your font and color theme for the best reading experience.
 - 📱 **Responsive:** Works great on desktop and mobile.
 - 🔒 **Privacy:** Your data is secure and never sold. Plus no ads!
 
